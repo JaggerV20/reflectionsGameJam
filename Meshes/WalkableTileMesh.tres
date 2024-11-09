@@ -1,0 +1,7 @@
+[gd_resource type="BoxMesh" load_steps=2 format=3 uid="uid://cnmc8shhs3wei"]
+
+[ext_resource type="Material" uid="uid://dub70yepc5vuh" path="res://Materials/WalkableTileMat.tres" id="1_ylani"]
+
+[resource]
+material = ExtResource("1_ylani")
+size = Vector3(0.9, 1.05, 0.9)

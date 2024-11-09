@@ -1,0 +1,7 @@
+[gd_resource type="BoxMesh" load_steps=2 format=3 uid="uid://dfly0et6hi3wl"]
+
+[ext_resource type="Material" uid="uid://djbmumyot81n" path="res://Materials/BreakableTileMat.tres" id="1_qi6f1"]
+
+[resource]
+material = ExtResource("1_qi6f1")
+size = Vector3(0.9, 1.05, 0.9)

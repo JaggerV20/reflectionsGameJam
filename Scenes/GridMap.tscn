@@ -1,0 +1,44 @@
+[gd_scene load_steps=9 format=3 uid="uid://csetj6cqwah8n"]
+
+[ext_resource type="BoxMesh" uid="uid://cnmc8shhs3wei" path="res://Meshes/WalkableTileMesh.tres" id="1_qhipj"]
+[ext_resource type="BoxMesh" uid="uid://cwqhx60rhy8cd" path="res://Meshes/FillableTileMesh.tres" id="2_apry7"]
+[ext_resource type="BoxMesh" uid="uid://dfly0et6hi3wl" path="res://Meshes/BreakableTileMesh.tres" id="3_fjjfd"]
+[ext_resource type="BoxMesh" uid="uid://ntpvny73fa74" path="res://Meshes/BoundaryTileMesh.tres" id="4_f7bnq"]
+[ext_resource type="BoxMesh" uid="uid://b1padcwvr871q" path="res://Meshes/StartTileMesh.tres" id="5_ex0u7"]
+[ext_resource type="BoxMesh" uid="uid://ch27kc8gyp67a" path="res://Meshes/EndTileMesh.tres" id="6_8huw2"]
+[ext_resource type="BoxMesh" uid="uid://d051e81qbvshq" path="res://Meshes/SwitchTileMesh.tres" id="7_84ore"]
+[ext_resource type="BoxMesh" uid="uid://bggeari3onty" path="res://Meshes/LockTileMesh.tres" id="8_ekkos"]
+
+[node name="GridMapHolder" type="Node3D"]
+
+[node name="WalkableTile" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+mesh = ExtResource("1_qhipj")
+
+[node name="FillableTile" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, -0.5, 0)
+mesh = ExtResource("2_apry7")
+
+[node name="BreakableTile" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.55, 0)
+mesh = ExtResource("3_fjjfd")
+
+[node name="BoundaryTile" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0.55, 0)
+mesh = ExtResource("4_f7bnq")
+
+[node name="StartTile" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, -0.5, 1)
+mesh = ExtResource("5_ex0u7")
+
+[node name="EndTile" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 1)
+mesh = ExtResource("6_8huw2")
+
+[node name="SwitchTile" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, -0.5, 1)
+mesh = ExtResource("7_84ore")
+
+[node name="LockTile" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.5, 1)
+mesh = ExtResource("8_ekkos")
