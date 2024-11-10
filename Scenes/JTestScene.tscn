@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://cou8ye7xnb48g"]
+[gd_scene load_steps=5 format=3 uid="uid://cou8ye7xnb48g"]
 
 [ext_resource type="Script" path="res://Scripts/StageHandler.gd" id="1_chfiy"]
 [ext_resource type="MeshLibrary" uid="uid://b42rnkosadtr2" path="res://basicTileMeshLib.tres" id="1_luscp"]
+[ext_resource type="PackedScene" uid="uid://s4u2unp6exht" path="res://Scenes/Unit.tscn" id="3_5ybgk"]
 
 [sub_resource type="Environment" id="Environment_nudws"]
 
@@ -21,3 +22,7 @@ transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 5, 10,
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="WorldEnvironment"]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 5, 10, 5)
+
+[node name="UnitHolder" type="Node3D" parent="."]
+
+[node name="tempUnit" parent="UnitHolder" instance=ExtResource("3_5ybgk")]

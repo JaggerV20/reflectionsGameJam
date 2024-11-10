@@ -1,6 +1,7 @@
 extends Node3D
 
 @onready var grid_map: GridMap = $GridMap
+@onready var unit_holder: Node3D = $UnitHolder
 
 var mapLength = 10
 var mapWidth = 10
@@ -29,6 +30,10 @@ var defaultTileDict = {
 	"Unit" : null,
 	"Corpse" : null
 }
+#Possibly not necessary
+var unitsArray = []
+#Stage handler checks if the player input is valid. It will change the map if needed, then allow player movement
+signal authorizeInput
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -90,7 +95,31 @@ func _ready() -> void:
 				stageMap[index] = defaultTileDict.duplicate()
 				stageMap[index]["Type"] = "Goal"
 		index += 1
+	var units = unit_holder.get_children()
+	unitsArray.resize(units.size())
+	var unitArrayIndex = 0
+	for unit in units:
+		unitsArray[unitArrayIndex] = unit
+		unit.mapWidth = mapWidth
+		unit.mapLength = mapLength
+		unit.unitIndex = startIndex
+		unit.nextIndex = startIndex
+		unit.zPos = (startIndex / mapWidth) + 0.5
+		unit.xPos = (startIndex % mapLength) + 0.5
+		unit.playerInput.connect(_on_player_input)
+		unit.reflect.connect(_on_player_reflect)
+		#Attach scripts once I write them
+	
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
+	pass
+	
+func _on_player_input(unit : Node3D):
+	var wantedTile = stageMap[unit.nextIndex]
+	#Simple movement test
+	print(wantedTile["Walkable"])
+	authorizeInput.emit(wantedTile["Walkable"])
+	
+func _on_player_reflect(unit : Node3D):
 	pass
