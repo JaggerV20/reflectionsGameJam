@@ -1,0 +1,7 @@
+[gd_resource type="BoxMesh" load_steps=2 format=3 uid="uid://d051e81qbvshq"]
+
+[ext_resource type="Material" uid="uid://rdw5b5doejoc" path="res://Materials/SwitchTileMaterial.tres" id="1_jqww2"]
+
+[resource]
+material = ExtResource("1_jqww2")
+size = Vector3(0.9, 1.05, 0.9)
