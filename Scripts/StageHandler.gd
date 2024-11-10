@@ -32,6 +32,8 @@ var defaultTileDict = {
 }
 #Possibly not necessary
 var unitsArray = []
+#Needs to be set whenever the player moves to the next unit
+var actionStack = []
 #Stage handler checks if the player input is valid. It will change the map if needed, then allow player movement
 signal authorizeInput
 
@@ -99,6 +101,8 @@ func _ready() -> void:
 	unitsArray.resize(units.size())
 	var unitArrayIndex = 0
 	for unit in units:
+		if(unitArrayIndex == 0):
+			actionStack.resize(unit.turnCount)
 		unitsArray[unitArrayIndex] = unit
 		unit.mapWidth = mapWidth
 		unit.mapLength = mapLength
@@ -108,6 +112,7 @@ func _ready() -> void:
 		unit.xPos = (startIndex % mapLength) + 0.5
 		unit.playerInput.connect(_on_player_input)
 		unit.reflect.connect(_on_player_reflect)
+		unit.nextUnit.connect(_on_next_unit)
 		#Attach scripts once I write them
 	
 
@@ -115,11 +120,23 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	pass
 	
+#This method will check if an action is legal, like if the player can walk on the tile
+#It also needs to handle tile changes, such as filling or breaking tiles.
+#This is how I'll store the action stack for reflects
 func _on_player_input(unit : Node3D):
 	var wantedTile = stageMap[unit.nextIndex]
 	#Simple movement test
-	print(wantedTile["Walkable"])
+	if(wantedTile["Walkable"]):
+		actionStack[unit.turnCount - 1] = unit.unitIndex
 	authorizeInput.emit(wantedTile["Walkable"])
 	
 func _on_player_reflect(unit : Node3D):
+	for action in actionStack:
+		if(action != null):
+			unit.unitIndex = action
+	unit.nextIndex = unit.unitIndex
+	unit.zPos = (unit.unitIndex / mapWidth) + 0.5
+	unit.xPos = (unit.unitIndex % mapLength) + 0.5
+	unit.currentTurnCount = actionStack.size()
+func _on_next_unit():
 	pass
