@@ -25,7 +25,9 @@ var defaultTileDict = {
 	"Fillable" : false,
 	"Breakable" : false,
 	"Start" : false,
-	"Goal" : false
+	"Goal" : false,
+	"Unit" : null,
+	"Corpse" : null
 }
 
 # Called when the node enters the scene tree for the first time.
