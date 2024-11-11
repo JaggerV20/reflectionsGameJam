@@ -3,6 +3,8 @@ extends Node3D
 @onready var grid_map: GridMap = $GridMap
 @onready var unit_holder: Node3D = $UnitHolder
 
+const FILLER_UNIT = preload("res://Scenes/FillerUnit.tscn")
+
 var mapLength = 10
 var mapWidth = 10
 var charMap =  ["-","-","-","-","-","-","-","G","-","-",
@@ -32,7 +34,7 @@ var defaultTileDict = {
 }
 
 var setNextUnit = false
-var sentUnits = []
+var availableUnits = ["Filler", "Filler"]
 var currentUnit = 0
 var unitNodes = []
 #Needs to be set whenever the player moves to the next unit
@@ -41,9 +43,7 @@ var actionStack = []
 signal authorizeInput
 
 # Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	print("Stage Handler Ready")
-	
+func _ready() -> void:	
 	stageMap.resize(mapLength * mapWidth)
 	var index = 0
 	for i in charMap:
@@ -102,28 +102,28 @@ func _ready() -> void:
 				stageMap[index] = defaultTileDict.duplicate()
 				stageMap[index]["Type"] = "Goal"
 		index += 1
+	var unitIndex = 0
+	for unit in availableUnits:
+		unit_holder.add_child(FILLER_UNIT.instantiate())
 	unitNodes = unit_holder.get_children()
-	setNextUnit = true
+	for unit in unitNodes:
+		if(unitIndex > 0):
+			unit.disabled = true
+			unit.visible = false
+		unit.unitIndex = startIndex
+		unit.nextIndex = startIndex
+		unit.zPos = (startIndex / mapWidth) + 0.5
+		unit.xPos = (startIndex % mapLength) + 0.5
+		unit.playerInput.connect(_on_player_input)
+		unit.reflect.connect(_on_player_reflect)
+		unit.nextUnit.connect(_on_next_unit)
+		unitIndex += 1
 	
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	if(setNextUnit):
-		print("set script")
-		unitNodes[currentUnit].set_script(load("res://Scripts/Unit.gd"))
-		unitNodes[currentUnit].unitIndex = startIndex
-		unitNodes[currentUnit].nextIndex = startIndex
-		unitNodes[currentUnit].zPos = (startIndex / mapWidth) + 0.5
-		unitNodes[currentUnit].xPos = (startIndex % mapLength) + 0.5
-		unitNodes[currentUnit].playerInput.connect(_on_player_input)
-		unitNodes[currentUnit].reflect.connect(_on_player_reflect)
-		unitNodes[currentUnit].nextUnit.connect(_on_next_unit)
-		actionStack.resize(unitNodes[currentUnit].turnCount)
-		setNextUnit = false
+	pass
 		
-func _on_units_sent(arr : Array):
-	sentUnits = arr
-	setNextUnit = true
 #This method will check if an action is legal, like if the player can walk on the tile
 #It also needs to handle tile changes, such as filling or breaking tiles.
 #This is how I'll store the action stack for reflects
@@ -131,17 +131,29 @@ func _on_player_input(unit : Node3D):
 	var wantedTile = stageMap[unit.nextIndex]
 	#Simple movement test
 	if(wantedTile["Walkable"]):
-		actionStack[unit.currentTurnCount - 1] = unit.unitIndex
+		unit.actionStack[unit.currentTurnCount - 1] = unit.unitIndex
 	authorizeInput.emit(wantedTile["Walkable"])
 	
 func _on_player_reflect(unit : Node3D):
-	for action in actionStack:
+	for action in unit.actionStack:
 		if(action != null):
 			unit.unitIndex = action
 	unit.nextIndex = unit.unitIndex
 	unit.zPos = (unit.unitIndex / mapWidth) + 0.5
 	unit.xPos = (unit.unitIndex % mapLength) + 0.5
-	unit.currentTurnCount = actionStack.size()
+	unit.currentTurnCount = unit.turnCount
 
 func _on_next_unit():
-	pass
+	currentUnit += 1
+	if(currentUnit >= availableUnits.size()):
+		currentUnit = 0
+	unitNodes[currentUnit].disabled = false
+	unitNodes[currentUnit].visible = true
+	unitNodes[currentUnit].unitIndex = startIndex
+	unitNodes[currentUnit].nextIndex = startIndex
+	unitNodes[currentUnit].zPos = (startIndex / mapWidth) + 0.5
+	unitNodes[currentUnit].xPos = (startIndex % mapLength) + 0.5
+	unitNodes[currentUnit].isAlive = true
+	unitNodes[currentUnit].currentTurnCount = unitNodes[currentUnit].turnCount
+	unitNodes[currentUnit].actionStack.clear()
+	unitNodes[currentUnit].actionStack.resize(unitNodes[currentUnit].turnCount)

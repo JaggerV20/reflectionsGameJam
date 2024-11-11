@@ -1,0 +1,14 @@
+[gd_scene load_steps=4 format=3 uid="uid://bdbdykvy6mnri"]
+
+[ext_resource type="Material" uid="uid://bbj3dpnikmoe7" path="res://Materials/FillerUnitMat.tres" id="1_5pc35"]
+[ext_resource type="Script" path="res://Scripts/FillerUnit.gd" id="1_m32em"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_ewcjc"]
+material = ExtResource("1_5pc35")
+size = Vector3(0.5, 0.5, 0.5)
+
+[node name="FillerUnit" type="Node3D"]
+script = ExtResource("1_m32em")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_ewcjc")
