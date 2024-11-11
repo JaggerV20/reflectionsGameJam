@@ -30,8 +30,11 @@ var defaultTileDict = {
 	"Unit" : null,
 	"Corpse" : null
 }
-#Possibly not necessary
-var unitsArray = []
+
+var setNextUnit = false
+var sentUnits = []
+var currentUnit = 0
+var unitNodes = []
 #Needs to be set whenever the player moves to the next unit
 var actionStack = []
 #Stage handler checks if the player input is valid. It will change the map if needed, then allow player movement
@@ -39,6 +42,8 @@ signal authorizeInput
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	print("Stage Handler Ready")
+	
 	stageMap.resize(mapLength * mapWidth)
 	var index = 0
 	for i in charMap:
@@ -97,29 +102,28 @@ func _ready() -> void:
 				stageMap[index] = defaultTileDict.duplicate()
 				stageMap[index]["Type"] = "Goal"
 		index += 1
-	var units = unit_holder.get_children()
-	unitsArray.resize(units.size())
-	var unitArrayIndex = 0
-	for unit in units:
-		if(unitArrayIndex == 0):
-			actionStack.resize(unit.turnCount)
-		unitsArray[unitArrayIndex] = unit
-		unit.mapWidth = mapWidth
-		unit.mapLength = mapLength
-		unit.unitIndex = startIndex
-		unit.nextIndex = startIndex
-		unit.zPos = (startIndex / mapWidth) + 0.5
-		unit.xPos = (startIndex % mapLength) + 0.5
-		unit.playerInput.connect(_on_player_input)
-		unit.reflect.connect(_on_player_reflect)
-		unit.nextUnit.connect(_on_next_unit)
-		#Attach scripts once I write them
+	unitNodes = unit_holder.get_children()
+	setNextUnit = true
 	
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	pass
-	
+	if(setNextUnit):
+		print("set script")
+		unitNodes[currentUnit].set_script(load("res://Scripts/Unit.gd"))
+		unitNodes[currentUnit].unitIndex = startIndex
+		unitNodes[currentUnit].nextIndex = startIndex
+		unitNodes[currentUnit].zPos = (startIndex / mapWidth) + 0.5
+		unitNodes[currentUnit].xPos = (startIndex % mapLength) + 0.5
+		unitNodes[currentUnit].playerInput.connect(_on_player_input)
+		unitNodes[currentUnit].reflect.connect(_on_player_reflect)
+		unitNodes[currentUnit].nextUnit.connect(_on_next_unit)
+		actionStack.resize(unitNodes[currentUnit].turnCount)
+		setNextUnit = false
+		
+func _on_units_sent(arr : Array):
+	sentUnits = arr
+	setNextUnit = true
 #This method will check if an action is legal, like if the player can walk on the tile
 #It also needs to handle tile changes, such as filling or breaking tiles.
 #This is how I'll store the action stack for reflects
@@ -127,7 +131,7 @@ func _on_player_input(unit : Node3D):
 	var wantedTile = stageMap[unit.nextIndex]
 	#Simple movement test
 	if(wantedTile["Walkable"]):
-		actionStack[unit.turnCount - 1] = unit.unitIndex
+		actionStack[unit.currentTurnCount - 1] = unit.unitIndex
 	authorizeInput.emit(wantedTile["Walkable"])
 	
 func _on_player_reflect(unit : Node3D):
@@ -138,5 +142,6 @@ func _on_player_reflect(unit : Node3D):
 	unit.zPos = (unit.unitIndex / mapWidth) + 0.5
 	unit.xPos = (unit.unitIndex % mapLength) + 0.5
 	unit.currentTurnCount = actionStack.size()
+
 func _on_next_unit():
 	pass

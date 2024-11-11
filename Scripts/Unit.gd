@@ -24,7 +24,6 @@ signal nextUnit
 func _ready() -> void:
 	stage_handler.authorizeInput.connect(_on_stage_response)
 	global_position.y = 0.55
-	pass #Not needed. Stage should handle this
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
