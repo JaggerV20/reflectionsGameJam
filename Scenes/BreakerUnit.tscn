@@ -1,0 +1,14 @@
+[gd_scene load_steps=4 format=3 uid="uid://deb0ls6fr6qo6"]
+
+[ext_resource type="Material" uid="uid://c84evxjk5m2i6" path="res://Materials/BreakerUnitMat.tres" id="1_4p3tq"]
+[ext_resource type="Script" path="res://Scripts/BreakerUnit.gd" id="1_mw574"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_maox4"]
+material = ExtResource("1_4p3tq")
+size = Vector3(0.5, 0.5, 0.5)
+
+[node name="BreakerUnit" type="Node3D"]
+script = ExtResource("1_mw574")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_maox4")

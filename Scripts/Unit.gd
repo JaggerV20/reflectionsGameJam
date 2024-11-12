@@ -59,7 +59,7 @@ func _process(delta: float) -> void:
 			reflect.emit(self)
 		if(Input.is_action_just_pressed("ui_accept")):
 			print("Wait")
-			currentTurnCount -= 1
+			playerInput.emit(self)
 			if(!isAlive):
 				disabled = true
 				print("emit nextUnit")
@@ -71,7 +71,5 @@ func _on_stage_response(allowed : bool):
 		zPos = (unitIndex / mapWidth) + 0.5
 		xPos = (unitIndex % mapLength) + 0.5
 		currentTurnCount -= 1
-		print(currentTurnCount)
-		print(global_position)
 	else:
 		nextIndex = unitIndex
