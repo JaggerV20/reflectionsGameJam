@@ -2,6 +2,7 @@ extends Node3D
 
 @onready var grid_map: GridMap = $GridMap
 @onready var unit_holder: Node3D = $UnitHolder
+@onready var j_test_select_scene: Node3D = $"../JTestSelectScene"
 
 const FILLER_UNIT = preload("res://Scenes/FillerUnit.tscn")
 const BREAKER_UNIT = preload("res://Scenes/BreakerUnit.tscn")
@@ -43,9 +44,11 @@ var unitNodes = []
 var actionStack = []
 #Stage handler checks if the player input is valid. It will change the map if needed, then allow player movement
 signal authorizeInput
+signal toggleSelection
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:	
+	j_test_select_scene.unitSelected.connect(_on_unit_selected)
 	stageMap.resize(mapLength * mapWidth)
 	var index = 0
 	for i in charMap:
@@ -114,19 +117,18 @@ func _ready() -> void:
 				stageMap[index]["Type"] = "Goal"
 				stageMap[index]["Loc"] = Vector3i(xPos,0,zPos)
 		index += 1
-	var unitIndex = 0
+
 	for unit in availableUnits:
 		match unit:
 			"Filler":
 				unit_holder.add_child(FILLER_UNIT.instantiate())
 			"Breaker":
 				unit_holder.add_child(BREAKER_UNIT.instantiate())
-				
+
 	unitNodes = unit_holder.get_children()
 	for unit in unitNodes:
-		if(unitIndex > 0):
-			unit.disabled = true
-			unit.visible = false
+		unit.disabled = true
+		unit.visible = false
 		unit.unitIndex = startIndex
 		unit.nextIndex = startIndex
 		unit.zPos = (startIndex / mapWidth) + 0.5
@@ -134,13 +136,16 @@ func _ready() -> void:
 		unit.playerInput.connect(_on_player_input)
 		unit.reflect.connect(_on_player_reflect)
 		unit.nextUnit.connect(_on_next_unit)
-		unitIndex += 1
-	
+
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	pass
 		
+func _on_unit_selected(index : int):
+	currentUnit = index
+	unitNodes[currentUnit].disabled = false
+	unitNodes[currentUnit].visible = true
 #This method will check if an action is legal, like if the player can walk on the tile
 #It also needs to handle tile changes, such as filling or breaking tiles.
 #This is how I'll store the action stack for reflects
