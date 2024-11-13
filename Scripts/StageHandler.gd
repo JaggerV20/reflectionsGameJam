@@ -127,7 +127,7 @@ func _ready() -> void:
 
 	unitNodes = unit_holder.get_children()
 	for unit in unitNodes:
-		unit.disabled = true
+		unit.disableAction = true
 		unit.visible = false
 		unit.unitIndex = startIndex
 		unit.nextIndex = startIndex
@@ -144,15 +144,20 @@ func _process(delta: float) -> void:
 		
 func _on_unit_selected(index : int):
 	currentUnit = index
-	unitNodes[currentUnit].disabled = false
+	unitNodes[currentUnit].disableAction = false
+	unitNodes[currentUnit].isAlive = true
 	unitNodes[currentUnit].visible = true
+	unitNodes[currentUnit].actionStack.clear()
+	unitNodes[currentUnit].actionStack.resize(unitNodes[currentUnit].turnCount)
+	unitNodes[currentUnit].unitIndex = startIndex
+	unitNodes[currentUnit].nextIndex = startIndex
+	unitNodes[currentUnit].zPos = (startIndex / mapWidth) + 0.5
+	unitNodes[currentUnit].xPos = (startIndex % mapLength) + 0.5
 #This method will check if an action is legal, like if the player can walk on the tile
 #It also needs to handle tile changes, such as filling or breaking tiles.
 #This is how I'll store the action stack for reflects
 func _on_player_input(unit : Node3D):
 	var wantedTile = stageMap[unit.nextIndex]
-	print(wantedTile)
-	#Simple movement test
 	if(unit.nextIndex == unit.unitIndex):
 		unit.actionStack[unit.currentTurnCount - 1] = {"Index" : unit.unitIndex, "ActionIndex" : unit.nextIndex, "Effect" : "Wait"}
 	elif(wantedTile["Fillable"] and unit.filler):
@@ -171,14 +176,16 @@ func _on_player_input(unit : Node3D):
 	authorizeInput.emit(stageMap[unit.nextIndex]["Walkable"])
 	
 func _on_player_reflect(unit : Node3D):
+	undoActionStack(unit)
+	unit.zPos = (unit.unitIndex / mapWidth) + 0.5
+	unit.xPos = (unit.unitIndex % mapLength) + 0.5
+
+func undoActionStack(unit : Node3D):
 	for action in unit.actionStack:
-		print(action)
 		if(action != null):
 			unit.unitIndex = action["Index"]
 			if(action["Effect"] == "Fill"):
-				print("Reset fill")
 				var changedTile = stageMap[action["ActionIndex"]]
-				print(changedTile["Loc"])
 				var tempX = changedTile["Loc"].x
 				var tempZ = changedTile["Loc"].z
 				grid_map.set_cell_item(Vector3i(tempX,0,tempZ),1)
@@ -188,9 +195,7 @@ func _on_player_reflect(unit : Node3D):
 				stageMap[action["ActionIndex"]]["Fillable"] = true
 				stageMap[action["ActionIndex"]]["Loc"] = Vector3i(tempX,0,tempZ)
 			elif(action["Effect"] == "Break"):
-				print("Reset break")
 				var changedTile = stageMap[action["ActionIndex"]]
-				print(changedTile["Loc"])
 				var tempX = changedTile["Loc"].x
 				var tempZ = changedTile["Loc"].z
 				grid_map.set_cell_item(Vector3i(tempX,1,tempZ),2)
@@ -200,23 +205,11 @@ func _on_player_reflect(unit : Node3D):
 				stageMap[action["ActionIndex"]]["Walkable"] = false
 				stageMap[action["ActionIndex"]]["Breakable"] = true
 				stageMap[action["ActionIndex"]]["Loc"] = Vector3i(tempX,0,tempZ)
-				
 	unit.nextIndex = unit.unitIndex
-	unit.zPos = (unit.unitIndex / mapWidth) + 0.5
-	unit.xPos = (unit.unitIndex % mapLength) + 0.5
 	unit.currentTurnCount = unit.turnCount
 
 func _on_next_unit():
-	currentUnit += 1
-	if(currentUnit >= availableUnits.size()):
-		currentUnit = 0
-	unitNodes[currentUnit].disabled = false
-	unitNodes[currentUnit].visible = true
-	unitNodes[currentUnit].unitIndex = startIndex
-	unitNodes[currentUnit].nextIndex = startIndex
-	unitNodes[currentUnit].zPos = (startIndex / mapWidth) + 0.5
-	unitNodes[currentUnit].xPos = (startIndex % mapLength) + 0.5
-	unitNodes[currentUnit].isAlive = true
-	unitNodes[currentUnit].currentTurnCount = unitNodes[currentUnit].turnCount
-	unitNodes[currentUnit].actionStack.clear()
-	unitNodes[currentUnit].actionStack.resize(unitNodes[currentUnit].turnCount)
+	for unit in unitNodes:
+		undoActionStack(unit)
+	j_test_select_scene.visible = true
+	toggleSelection.emit()

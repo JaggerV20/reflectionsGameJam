@@ -20,7 +20,7 @@ var actionStack = []
 var filler = false
 var breaker = false
 
-var disabled = false
+var disableAction = false
 
 #"Propose" movement to the stage handler. Send unit identifier. Stage handler will check if nextIndex is valid
 signal playerInput
@@ -36,7 +36,7 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	if(!disabled):
+	if(!disableAction):
 		global_position.x = xPos
 		global_position.z = zPos
 		if(currentTurnCount == 0):
@@ -58,15 +58,13 @@ func _process(delta: float) -> void:
 			isAlive = true
 			reflect.emit(self)
 		if(Input.is_action_just_pressed("ui_accept")):
-			print("Wait")
 			playerInput.emit(self)
 			if(!isAlive):
-				disabled = true
-				print("emit nextUnit")
+				disableAction = true
 				nextUnit.emit()
 			
 func _on_stage_response(allowed : bool):
-	if(allowed and !disabled):
+	if(allowed and !disableAction):
 		unitIndex = nextIndex
 		zPos = (unitIndex / mapWidth) + 0.5
 		xPos = (unitIndex % mapLength) + 0.5
