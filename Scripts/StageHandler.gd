@@ -98,6 +98,10 @@ func _ready() -> void:
 				stageMap[index] = defaultTileDict.duplicate()
 				stageMap[index]["Type"] = "Switch"
 				stageMap[index]["Loc"] = Vector3i(xPos,0,zPos)
+				stageMap[index]["OnSwitch"] = []
+				stageMap[index]["OnSwitch"].resize(availableUnits.size())
+				for unit in stageMap[index]["OnSwitch"]:
+					unit = false
 				var lockIndex = 0
 				var found = false
 				while(!found and lockIndex < mapLength * mapWidth):
@@ -209,6 +213,7 @@ func _on_player_input(unit : Node3D):
 		if(wantedTile["Type"] == "Switch"):
 			var lockIndex = stageMap[unit.nextIndex]["Unlocks"]
 			var lockLoc = stageMap[lockIndex]["Loc"]
+			stageMap[unit.nextIndex]["OnSwitch"][currentUnit] = true
 			grid_map.set_cell_item(lockLoc, -1)
 			stageMap[lockIndex] = defaultTileDict.duplicate()
 			stageMap[lockIndex]["Loc"] = lockLoc
@@ -221,15 +226,21 @@ func _on_player_input(unit : Node3D):
 	if(stageMap[unit.nextIndex]["Walkable"]):
 		#Check if a unit was on a switch, and has left the switch
 		if(stageMap[unit.unitIndex]["Type"] == "Switch" and unit.unitIndex != unit.nextIndex):
+			stageMap[unit.unitIndex]["OnSwitch"][currentUnit] = false
 			var lockIndex = stageMap[unit.unitIndex]["Unlocks"]
 			var tempLoc = stageMap[lockIndex]["Loc"]
-			grid_map.set_cell_item(tempLoc, 7)
-			stageMap[lockIndex] = defaultTileDict.duplicate()
-			stageMap[lockIndex]["Loc"] = tempLoc
-			stageMap[lockIndex]["Walkable"] = false
-			stageMap[lockIndex]["Type"] = "Lock"
+			var unitsOnSwitch = false
+			for switchUnits in stageMap[unit.unitIndex]["OnSwitch"]:
+				unitsOnSwitch = unitsOnSwitch or switchUnits
+			if(!unitsOnSwitch):
+				grid_map.set_cell_item(tempLoc, 7)
+				stageMap[lockIndex] = defaultTileDict.duplicate()
+				stageMap[lockIndex]["Loc"] = tempLoc
+				stageMap[lockIndex]["Walkable"] = false
+				stageMap[lockIndex]["Type"] = "Lock"
 		authorizeInput.emit(true)
 		playbackActionStack(unit.currentTurnCount)
+		
 	else:
 		authorizeInput.emit(false)
 	
@@ -237,6 +248,7 @@ func _on_player_input(unit : Node3D):
 #If an action is in the actionStack, it's legal. Just ignore the currentIndex unit
 func playbackActionStack(turn : int):
 	var ghostIndex = 0
+	var unitNum = 0
 	for unit in unitNodes:
 		if(!unit.isAlive):
 			var index = turn
@@ -266,18 +278,25 @@ func playbackActionStack(turn : int):
 					stageMap[lockIndex]["Loc"] = lockLoc
 				#Checking if unit is no longer on switch
 				if(stageMap[unit.actionStack[index]["Index"]]["Type"] == "Switch" and unit.actionStack[index]["Index"] != unit.actionStack[index]["ActionIndex"]):
+					stageMap[unit.actionStack[index]["Index"]]["OnSwitch"][unitNum] = false
 					var lockIndex = stageMap[unit.actionStack[index]["Index"]]["Unlocks"]
 					var tempLoc = stageMap[lockIndex]["Loc"]
-					grid_map.set_cell_item(tempLoc, 7)
-					stageMap[lockIndex] = defaultTileDict.duplicate()
-					stageMap[lockIndex]["Loc"] = tempLoc
-					stageMap[lockIndex]["Walkable"] = false
-					stageMap[lockIndex]["Type"] = "Lock"
+					var unitsOnSwitch = false
+					print(stageMap[unit.actionStack[index]["Index"]]["OnSwitch"])
+					for switchUnits in stageMap[unit.actionStack[index]["Index"]]["OnSwitch"]:
+						unitsOnSwitch = unitsOnSwitch or switchUnits
+					if(!unitsOnSwitch):
+						grid_map.set_cell_item(tempLoc, 7)
+						stageMap[lockIndex] = defaultTileDict.duplicate()
+						stageMap[lockIndex]["Loc"] = tempLoc
+						stageMap[lockIndex]["Walkable"] = false
+						stageMap[lockIndex]["Type"] = "Lock"
 				if(stageMap[unit.actionStack[index]["ActionIndex"]]["ContainsSoul"]):
 					soulNodes[stageMap[unit.actionStack[index]["ActionIndex"]]["SoulIndex"]].visible = false
 					stageMap[unit.actionStack[index]["ActionIndex"]]["ContainsSoul"] = false
 					collectedSouls += 1
 		ghostIndex += 1
+		unitNum += 1
 
 
 func _on_player_reflect(unit : Node3D):
