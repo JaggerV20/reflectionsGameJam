@@ -18,6 +18,7 @@ var actionStack = []
 
 var filler = false
 var breaker = false
+var flyer = false
 
 var disableAction = false
 var onSwitch = 0

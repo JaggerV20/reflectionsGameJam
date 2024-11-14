@@ -3,10 +3,11 @@ extends Node3D
 @onready var stage_handler: Node3D = $"../StageHandler"
 @onready var selection_highlight_1: MeshInstance3D = $SelectionBox1/MeshInstance3D/SelectionHighlight1
 @onready var selection_highlight_2: MeshInstance3D = $SelectionBox2/MeshInstance3D/SelectionHighlight2
+@onready var selection_highlight_3: MeshInstance3D = $SelectionBox3/MeshInstance3D/SelectionHighlight3
 @onready var control: Control = $Control
 @onready var background: MeshInstance3D = $Background
 
-var possibleUnits = ["Filler", "Breaker"]
+var possibleUnits = ["Filler", "Breaker", "Flyer"]
 var unitArray = ["Temp", "Temp"]
 var highlightArray
 
@@ -23,7 +24,7 @@ signal unitSelected
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	stage_handler.toggleSelection.connect(_on_toggle_selection)
-	highlightArray = [selection_highlight_1, selection_highlight_2]
+	highlightArray = [selection_highlight_1, selection_highlight_2, selection_highlight_3]
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:

@@ -8,9 +8,11 @@ extends Node3D
 
 const FILLER_UNIT = preload("res://Scenes/FillerUnit.tscn")
 const BREAKER_UNIT = preload("res://Scenes/BreakerUnit.tscn")
+const FLYER_UNIT = preload("res://Scenes/FlyerUnit.tscn")
 
 const BREAKER_GHOST = preload("res://Scenes/BreakerGhost.tscn")
 const FILLER_GHOST = preload("res://Scenes/FillerGhost.tscn")
+const FLYER_GHOST = preload("res://Scenes/FlyerGhost.tscn")
 
 const SOUL = preload("res://Scenes/Soul.tscn")
 
@@ -24,7 +26,7 @@ var charMap =  ["-","-","-","-","-","-","-","G","-","-",
 				"|",".",".",".",".",".",".",".",".","|",
 				"|",".",".",".",".",".",".",".",".","|",
 				"|",".",".",".",".",".",".",".",".","|",
-				"|",".","S",".",".",".",".",".",".","|",
+				"|",".",".","S",".",".",".",".",".","|",
 				"-","-","-","-","-","-","-","-","-","-"]
 var soulArray = [11,35,36,37,38,88]
 var stageMap = []
@@ -45,7 +47,7 @@ var defaultTileDict = {
 }
 
 var setNextUnit = false
-var availableUnits = ["Filler", "Breaker"]
+var availableUnits = ["Filler", "Breaker", "Flyer"]
 var currentUnit = 0
 var unitNodes = []
 var ghostNodes = []
@@ -155,6 +157,9 @@ func _ready() -> void:
 			"Breaker":
 				unit_holder.add_child(BREAKER_UNIT.instantiate())
 				ghost_holder.add_child(BREAKER_GHOST.instantiate())
+			"Flyer":
+				unit_holder.add_child(FLYER_UNIT.instantiate())
+				ghost_holder.add_child(FLYER_GHOST.instantiate())
 
 	unitNodes = unit_holder.get_children()
 	soulNodes = soul_holder.get_children()
@@ -208,7 +213,7 @@ func _on_player_input(unit : Node3D):
 		unit.actionStack[unit.currentTurnCount - 1] = {"Index" : unit.unitIndex, "ActionIndex" : unit.nextIndex, "Effect" : "Break", "CollectedSoul" : false} 
 		stageMap[unit.nextIndex] = defaultTileDict.duplicate()
 		stageMap[unit.nextIndex]["Loc"] = Vector3i(wantedTile["Loc"].x, 0, wantedTile["Loc"].z)
-	elif(wantedTile["Walkable"]):
+	elif(wantedTile["Walkable"] or (wantedTile["Fillable"] and unit.flyer)):
 		unit.actionStack[unit.currentTurnCount - 1] = {"Index" : unit.unitIndex, "ActionIndex" : unit.nextIndex, "Effect" : "Move", "CollectedSoul" : false} 
 		if(wantedTile["Type"] == "Switch"):
 			var lockIndex = stageMap[unit.nextIndex]["Unlocks"]
@@ -223,7 +228,7 @@ func _on_player_input(unit : Node3D):
 			collectedSouls += 1
 	
 	#Confirming action is valid
-	if(stageMap[unit.nextIndex]["Walkable"]):
+	if(stageMap[unit.nextIndex]["Walkable"] or (wantedTile["Fillable"] and unit.flyer)):
 		#Check if a unit was on a switch, and has left the switch
 		if(stageMap[unit.unitIndex]["Type"] == "Switch" and unit.unitIndex != unit.nextIndex):
 			stageMap[unit.unitIndex]["OnSwitch"][currentUnit] = false
