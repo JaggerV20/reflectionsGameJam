@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://ciapgnqbvwlae"]
+
+[ext_resource type="BoxMesh" uid="uid://kktsq6tdoxcg" path="res://Meshes/FillerGhostMesh.tres" id="1_4vkrh"]
+
+[node name="FillerGhost" type="Node3D"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = ExtResource("1_4vkrh")

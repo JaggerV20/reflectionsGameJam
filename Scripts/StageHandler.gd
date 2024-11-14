@@ -2,10 +2,14 @@ extends Node3D
 
 @onready var grid_map: GridMap = $GridMap
 @onready var unit_holder: Node3D = $UnitHolder
+@onready var ghost_holder: Node3D = $GhostHolder
 @onready var j_test_select_scene: Node3D = $"../JTestSelectScene"
 
 const FILLER_UNIT = preload("res://Scenes/FillerUnit.tscn")
 const BREAKER_UNIT = preload("res://Scenes/BreakerUnit.tscn")
+
+const BREAKER_GHOST = preload("res://Scenes/BreakerGhost.tscn")
+const FILLER_GHOST = preload("res://Scenes/FillerGhost.tscn")
 
 var mapLength = 10
 var mapWidth = 10
@@ -40,6 +44,7 @@ var setNextUnit = false
 var availableUnits = ["Filler", "Breaker"]
 var currentUnit = 0
 var unitNodes = []
+var ghostNodes = []
 #Needs to be set whenever the player moves to the next unit
 var actionStack = []
 #Stage handler checks if the player input is valid. It will change the map if needed, then allow player movement
@@ -117,13 +122,14 @@ func _ready() -> void:
 				stageMap[index]["Type"] = "Goal"
 				stageMap[index]["Loc"] = Vector3i(xPos,0,zPos)
 		index += 1
-
 	for unit in availableUnits:
 		match unit:
 			"Filler":
 				unit_holder.add_child(FILLER_UNIT.instantiate())
+				ghost_holder.add_child(FILLER_GHOST.instantiate())
 			"Breaker":
 				unit_holder.add_child(BREAKER_UNIT.instantiate())
+				ghost_holder.add_child(BREAKER_GHOST.instantiate())
 
 	unitNodes = unit_holder.get_children()
 	for unit in unitNodes:
@@ -136,6 +142,9 @@ func _ready() -> void:
 		unit.playerInput.connect(_on_player_input)
 		unit.reflect.connect(_on_player_reflect)
 		unit.nextUnit.connect(_on_next_unit)
+	ghostNodes = ghost_holder.get_children()
+	for ghost in ghostNodes:
+		ghost.visible = false
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -153,6 +162,7 @@ func _on_unit_selected(index : int):
 	unitNodes[currentUnit].nextIndex = startIndex
 	unitNodes[currentUnit].zPos = (startIndex / mapWidth) + 0.5
 	unitNodes[currentUnit].xPos = (startIndex % mapLength) + 0.5
+	ghostNodes[currentUnit].visible = false
 #This method will check if an action is legal, like if the player can walk on the tile
 #It also needs to handle tile changes, such as filling or breaking tiles.
 #This is how I'll store the action stack for reflects
@@ -211,5 +221,9 @@ func undoActionStack(unit : Node3D):
 func _on_next_unit():
 	for unit in unitNodes:
 		undoActionStack(unit)
+	ghostNodes[currentUnit].visible = true
+	var tempX = (startIndex % mapWidth) + 0.5
+	var tempZ = (startIndex / mapLength) + 0.5
+	ghostNodes[currentUnit].global_position = Vector3(tempX, 1.05, tempZ)
 	j_test_select_scene.visible = true
 	toggleSelection.emit()
