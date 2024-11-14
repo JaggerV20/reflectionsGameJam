@@ -4,12 +4,15 @@ extends Node3D
 @onready var unit_holder: Node3D = $UnitHolder
 @onready var ghost_holder: Node3D = $GhostHolder
 @onready var j_test_select_scene: Node3D = $"../JTestSelectScene"
+@onready var soul_holder: Node3D = $SoulHolder
 
 const FILLER_UNIT = preload("res://Scenes/FillerUnit.tscn")
 const BREAKER_UNIT = preload("res://Scenes/BreakerUnit.tscn")
 
 const BREAKER_GHOST = preload("res://Scenes/BreakerGhost.tscn")
 const FILLER_GHOST = preload("res://Scenes/FillerGhost.tscn")
+
+const SOUL = preload("res://Scenes/Soul.tscn")
 
 var mapLength = 10
 var mapWidth = 10
@@ -23,7 +26,7 @@ var charMap =  ["-","-","-","-","-","-","-","G","-","-",
 				"|",".",".",".",".",".",".",".",".","|",
 				"|",".","S",".",".",".",".",".",".","|",
 				"-","-","-","-","-","-","-","-","-","-"]
-				
+var soulArray = [11,35,36,37,38,88]
 var stageMap = []
 var startIndex = 0
 var goalIndex = 0
@@ -37,7 +40,8 @@ var defaultTileDict = {
 	"Start" : false,
 	"Goal" : false,
 	"Unit" : null,
-	"Corpse" : null
+	"Corpse" : null,
+	"ContainsSoul" : false
 }
 
 var setNextUnit = false
@@ -45,8 +49,13 @@ var availableUnits = ["Filler", "Breaker"]
 var currentUnit = 0
 var unitNodes = []
 var ghostNodes = []
+var soulNodes = []
 #Needs to be set whenever the player moves to the next unit
 var actionStack = []
+
+var collectedSouls = 0
+var soulsNeeded = 3
+
 #Stage handler checks if the player input is valid. It will change the map if needed, then allow player movement
 signal authorizeInput
 signal toggleSelection
@@ -56,6 +65,7 @@ func _ready() -> void:
 	j_test_select_scene.unitSelected.connect(_on_unit_selected)
 	stageMap.resize(mapLength * mapWidth)
 	var index = 0
+	var soulIndex = 0
 	for i in charMap:
 		var zPos = index / mapWidth
 		var xPos = index % mapLength
@@ -123,6 +133,15 @@ func _ready() -> void:
 				stageMap[index] = defaultTileDict.duplicate()
 				stageMap[index]["Type"] = "Goal"
 				stageMap[index]["Loc"] = Vector3i(xPos,0,zPos)
+		if(soulIndex < soulArray.size() and index == soulArray[soulIndex]):
+			stageMap[index]["ContainsSoul"] = true
+			stageMap[index]["SoulIndex"] = soulIndex
+			var soulTemp = SOUL.instantiate()
+			soulTemp.soulIndex = index
+			soulTemp.global_position = Vector3(xPos + 0.5, 1.05, zPos + 0.5)
+			soul_holder.add_child(soulTemp)
+			soulIndex += 1
+			
 		index += 1
 	for unit in availableUnits:
 		match unit:
@@ -134,6 +153,7 @@ func _ready() -> void:
 				ghost_holder.add_child(BREAKER_GHOST.instantiate())
 
 	unitNodes = unit_holder.get_children()
+	soulNodes = soul_holder.get_children()
 	for unit in unitNodes:
 		unit.disableAction = true
 		unit.visible = false
@@ -172,26 +192,32 @@ func _on_unit_selected(index : int):
 func _on_player_input(unit : Node3D):
 	var wantedTile = stageMap[unit.nextIndex]
 	if(unit.nextIndex == unit.unitIndex):
-		unit.actionStack[unit.currentTurnCount - 1] = {"Index" : unit.unitIndex, "ActionIndex" : unit.nextIndex, "Effect" : "Wait"}
+		unit.actionStack[unit.currentTurnCount - 1] = {"Index" : unit.unitIndex, "ActionIndex" : unit.nextIndex, "Effect" : "Wait", "CollectedSoul" : false}
 	elif(wantedTile["Fillable"] and unit.filler):
 		grid_map.set_cell_item(wantedTile["Loc"], 0)
 		stageMap[unit.nextIndex] = defaultTileDict.duplicate()
 		stageMap[unit.nextIndex]["Loc"] = wantedTile["Loc"]
-		unit.actionStack[unit.currentTurnCount - 1] = {"Index" : unit.unitIndex, "ActionIndex" : unit.nextIndex, "Effect" : "Fill"} 
+		unit.actionStack[unit.currentTurnCount - 1] = {"Index" : unit.unitIndex, "ActionIndex" : unit.nextIndex, "Effect" : "Fill", "CollectedSoul" : false} 
 	elif(wantedTile["Breakable"] and unit.breaker):
 		grid_map.set_cell_item(Vector3i(wantedTile["Loc"].x, 1, wantedTile["Loc"].z), -1)
 		grid_map.set_cell_item(Vector3i(wantedTile["Loc"].x, 0, wantedTile["Loc"].z), 0)
-		unit.actionStack[unit.currentTurnCount - 1] = {"Index" : unit.unitIndex, "ActionIndex" : unit.nextIndex, "Effect" : "Break"} 
+		unit.actionStack[unit.currentTurnCount - 1] = {"Index" : unit.unitIndex, "ActionIndex" : unit.nextIndex, "Effect" : "Break", "CollectedSoul" : false} 
 		stageMap[unit.nextIndex] = defaultTileDict.duplicate()
 		stageMap[unit.nextIndex]["Loc"] = Vector3i(wantedTile["Loc"].x, 0, wantedTile["Loc"].z)
 	elif(wantedTile["Walkable"]):
-		unit.actionStack[unit.currentTurnCount - 1] = {"Index" : unit.unitIndex, "ActionIndex" : unit.nextIndex, "Effect" : "Move"} 
+		unit.actionStack[unit.currentTurnCount - 1] = {"Index" : unit.unitIndex, "ActionIndex" : unit.nextIndex, "Effect" : "Move", "CollectedSoul" : false} 
 		if(wantedTile["Type"] == "Switch"):
 			var lockIndex = stageMap[unit.nextIndex]["Unlocks"]
 			var lockLoc = stageMap[lockIndex]["Loc"]
 			grid_map.set_cell_item(lockLoc, -1)
 			stageMap[lockIndex] = defaultTileDict.duplicate()
 			stageMap[lockIndex]["Loc"] = lockLoc
+		if(wantedTile["ContainsSoul"]):
+			soulNodes[wantedTile["SoulIndex"]].visible = false
+			stageMap[unit.nextIndex]["ContainsSoul"] = false
+			collectedSouls += 1
+	
+	#Confirming action is valid
 	if(stageMap[unit.nextIndex]["Walkable"]):
 		#Check if a unit was on a switch, and has left the switch
 		if(stageMap[unit.unitIndex]["Type"] == "Switch" and unit.unitIndex != unit.nextIndex):
@@ -247,13 +273,13 @@ func playbackActionStack(turn : int):
 					stageMap[lockIndex]["Loc"] = tempLoc
 					stageMap[lockIndex]["Walkable"] = false
 					stageMap[lockIndex]["Type"] = "Lock"
+				if(stageMap[unit.actionStack[index]["ActionIndex"]]["ContainsSoul"]):
+					soulNodes[stageMap[unit.actionStack[index]["ActionIndex"]]["SoulIndex"]].visible = false
+					stageMap[unit.actionStack[index]["ActionIndex"]]["ContainsSoul"] = false
+					collectedSouls += 1
 		ghostIndex += 1
 
 
-					
-				
-		
-	
 func _on_player_reflect(unit : Node3D):
 	undoActionStack()
 	unit.zPos = (unit.unitIndex / mapWidth) + 0.5
@@ -293,8 +319,15 @@ func undoActionStack():
 					stageMap[lockIndex]["Loc"] = lockLoc
 					stageMap[lockIndex]["Walkable"] = false
 					stageMap[lockIndex]["Type"] = "Lock"
+
+					
 		unit.nextIndex = unit.unitIndex
 		unit.currentTurnCount = unit.turnCount
+	for soul in soulNodes:
+		if(!soul.visible):
+			stageMap[soul.soulIndex]["ContainsSoul"] = true
+			soul.visible = true
+			collectedSouls -= 1 
 	for ghost in ghostNodes:
 		var tempX = (startIndex % mapWidth) + 0.5
 		var tempZ = (startIndex / mapLength) + 0.5

@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://cerkrvi38rr4j"]
+
+[ext_resource type="SphereMesh" uid="uid://7s2ecd2pf3sv" path="res://Meshes/SoulMesh.tres" id="1_64sr5"]
+[ext_resource type="Script" path="res://Scripts/Soul.gd" id="1_ayjlg"]
+
+[node name="Soul" type="Node3D"]
+script = ExtResource("1_ayjlg")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = ExtResource("1_64sr5")
