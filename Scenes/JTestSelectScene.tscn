@@ -71,12 +71,14 @@ offset_right = 40.0
 offset_bottom = 40.0
 
 [node name="SelectionLabel1" type="Label" parent="Control"]
+layout_mode = 0
 offset_left = 200.0
 offset_top = 100.0
 offset_right = 339.0
 offset_bottom = 123.0
 
 [node name="Label1" type="Label" parent="Control"]
+layout_mode = 0
 offset_left = 526.0
 offset_top = 33.0
 offset_right = 659.0
@@ -85,12 +87,14 @@ text = "Select Unit Order
 "
 
 [node name="SelectionLabel2" type="Label" parent="Control"]
+layout_mode = 0
 offset_left = 800.0
 offset_top = 100.0
 offset_right = 939.0
 offset_bottom = 123.0
 
 [node name="UnitDescriptionLabel1" type="Label" parent="Control"]
+layout_mode = 0
 offset_left = 150.0
 offset_top = 500.0
 offset_right = 424.0
@@ -100,6 +104,7 @@ Turn fillable tiles into walkable tiles"
 horizontal_alignment = 1
 
 [node name="UnitDescriptionLabel2" type="Label" parent="Control"]
+layout_mode = 0
 offset_left = 700.0
 offset_top = 500.0
 offset_right = 999.0

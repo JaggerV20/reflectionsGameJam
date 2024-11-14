@@ -54,7 +54,7 @@ func _process(delta: float) -> void:
 				playerInput.emit(self)
 		if(canReflect and (currentTurnCount != turnCount) and Input.is_action_just_pressed("reflect")):
 			#I just set reflect to r
-			canReflect = false
+			#canReflect = false
 			isAlive = true
 			reflect.emit(self)
 		if(Input.is_action_just_pressed("ui_accept")):

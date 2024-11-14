@@ -166,6 +166,7 @@ func _on_player_input(unit : Node3D):
 	authorizeInput.emit(stageMap[unit.nextIndex]["Walkable"])
 	
 func _on_player_reflect(unit : Node3D):
+	%ReflectTransition.reflectTransition()
 	for action in unit.actionStack:
 		print(action)
 		if(action != null):
