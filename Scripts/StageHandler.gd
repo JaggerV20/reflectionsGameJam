@@ -182,45 +182,86 @@ func _on_player_input(unit : Node3D):
 		stageMap[unit.nextIndex] = defaultTileDict.duplicate()
 		stageMap[unit.nextIndex]["Loc"] = Vector3i(wantedTile["Loc"].x, 0, wantedTile["Loc"].z)
 	elif(wantedTile["Walkable"]):
-		unit.actionStack[unit.currentTurnCount - 1] = {"Index" : unit.unitIndex, "Effect" : "Move"} 
-	authorizeInput.emit(stageMap[unit.nextIndex]["Walkable"])
+		unit.actionStack[unit.currentTurnCount - 1] = {"Index" : unit.unitIndex, "ActionIndex" : unit.nextIndex, "Effect" : "Move"} 
+	if(stageMap[unit.nextIndex]["Walkable"]):
+		authorizeInput.emit(true)
+		playbackActionStack(unit.currentTurnCount)
+	else:
+		authorizeInput.emit(false)
+	
+#This will be very similar to _on_player_input, but it doesn't validate anything.
+#If an action is in the actionStack, it's legal. Just ignore the currentIndex unit
+func playbackActionStack(turn : int):
+	var ghostIndex = 0
+	for unit in unitNodes:
+		if(!unit.isAlive):
+			var index = turn
+			if(unit.actionStack[index] != null):
+				var tempX = (unit.actionStack[index]["ActionIndex"] % mapWidth) + 0.5
+				var tempZ = (unit.actionStack[index]["ActionIndex"] / mapLength) + 0.5
+				var tempY = 1.05
+				ghostNodes[ghostIndex].global_position = Vector3(tempX, tempY, tempZ)
+				#Movement change can be applied even if the unit doesn't move.
+				#Only need to check if tiles are changed
+				if(unit.actionStack[index]["Effect"] == "Fill"):
+					var tempLoc = stageMap[unit.actionStack[index]["ActionIndex"]]["Loc"]
+					grid_map.set_cell_item(tempLoc, 0)
+					stageMap[unit.actionStack[index]["ActionIndex"]] = defaultTileDict.duplicate()
+					stageMap[unit.actionStack[index]["ActionIndex"]]["Loc"] = tempLoc
+				elif(unit.actionStack[index]["Effect"] == "Break"):
+					var tempLoc = stageMap[unit.actionStack[index]["ActionIndex"]]["Loc"]
+					grid_map.set_cell_item(Vector3i(tempLoc.x, 1, tempLoc.z), -1)
+					grid_map.set_cell_item(Vector3i(tempLoc.x, 0, tempLoc.z), 0)
+					stageMap[unit.actionStack[index]["ActionIndex"]] = defaultTileDict.duplicate()
+					stageMap[unit.actionStack[index]["ActionIndex"]]["Loc"] = Vector3i(tempLoc.x, 0, tempLoc.z)
+		ghostIndex += 1
+
+
+					
+				
+		
 	
 func _on_player_reflect(unit : Node3D):
-	undoActionStack(unit)
+	undoActionStack()
 	unit.zPos = (unit.unitIndex / mapWidth) + 0.5
 	unit.xPos = (unit.unitIndex % mapLength) + 0.5
 
-func undoActionStack(unit : Node3D):
-	for action in unit.actionStack:
-		if(action != null):
-			unit.unitIndex = action["Index"]
-			if(action["Effect"] == "Fill"):
-				var changedTile = stageMap[action["ActionIndex"]]
-				var tempX = changedTile["Loc"].x
-				var tempZ = changedTile["Loc"].z
-				grid_map.set_cell_item(Vector3i(tempX,0,tempZ),1)
-				stageMap[action["ActionIndex"]] = defaultTileDict.duplicate()
-				stageMap[action["ActionIndex"]]["Type"] = "Fillable"
-				stageMap[action["ActionIndex"]]["Walkable"] = false
-				stageMap[action["ActionIndex"]]["Fillable"] = true
-				stageMap[action["ActionIndex"]]["Loc"] = Vector3i(tempX,0,tempZ)
-			elif(action["Effect"] == "Break"):
-				var changedTile = stageMap[action["ActionIndex"]]
-				var tempX = changedTile["Loc"].x
-				var tempZ = changedTile["Loc"].z
-				grid_map.set_cell_item(Vector3i(tempX,1,tempZ),2)
-				grid_map.set_cell_item(Vector3i(tempX,0,tempZ),-1)
-				stageMap[action["ActionIndex"]] = defaultTileDict.duplicate()
-				stageMap[action["ActionIndex"]]["Type"] = "Breakable"
-				stageMap[action["ActionIndex"]]["Walkable"] = false
-				stageMap[action["ActionIndex"]]["Breakable"] = true
-				stageMap[action["ActionIndex"]]["Loc"] = Vector3i(tempX,0,tempZ)
-	unit.nextIndex = unit.unitIndex
-	unit.currentTurnCount = unit.turnCount
+func undoActionStack():
+	for unit in unitNodes:
+		for action in unit.actionStack:
+			if(action != null):
+				unit.unitIndex = action["Index"]
+				if(action["Effect"] == "Fill"):
+					var changedTile = stageMap[action["ActionIndex"]]
+					var tempX = changedTile["Loc"].x
+					var tempZ = changedTile["Loc"].z
+					grid_map.set_cell_item(Vector3i(tempX,0,tempZ),1)
+					stageMap[action["ActionIndex"]] = defaultTileDict.duplicate()
+					stageMap[action["ActionIndex"]]["Type"] = "Fillable"
+					stageMap[action["ActionIndex"]]["Walkable"] = false
+					stageMap[action["ActionIndex"]]["Fillable"] = true
+					stageMap[action["ActionIndex"]]["Loc"] = Vector3i(tempX,0,tempZ)
+				elif(action["Effect"] == "Break"):
+					var changedTile = stageMap[action["ActionIndex"]]
+					var tempX = changedTile["Loc"].x
+					var tempZ = changedTile["Loc"].z
+					grid_map.set_cell_item(Vector3i(tempX,1,tempZ),2)
+					grid_map.set_cell_item(Vector3i(tempX,0,tempZ),-1)
+					stageMap[action["ActionIndex"]] = defaultTileDict.duplicate()
+					stageMap[action["ActionIndex"]]["Type"] = "Breakable"
+					stageMap[action["ActionIndex"]]["Walkable"] = false
+					stageMap[action["ActionIndex"]]["Breakable"] = true
+					stageMap[action["ActionIndex"]]["Loc"] = Vector3i(tempX,0,tempZ)
+		unit.nextIndex = unit.unitIndex
+		unit.currentTurnCount = unit.turnCount
+	for ghost in ghostNodes:
+		var tempX = (startIndex % mapWidth) + 0.5
+		var tempZ = (startIndex / mapLength) + 0.5
+		ghost.global_position = Vector3(tempX, 1.05, tempZ)
+	
 
 func _on_next_unit():
-	for unit in unitNodes:
-		undoActionStack(unit)
+	undoActionStack()
 	ghostNodes[currentUnit].visible = true
 	var tempX = (startIndex % mapWidth) + 0.5
 	var tempZ = (startIndex / mapLength) + 0.5

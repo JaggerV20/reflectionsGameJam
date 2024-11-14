@@ -13,7 +13,6 @@ var unitIndex = 0
 var nextIndex = 0 #Safety. Find the next index, check if it's legal
 var turnCount = 12
 var currentTurnCount = turnCount
-var canReflect = true
 var isAlive = true
 var actionStack = []
 
@@ -52,16 +51,17 @@ func _process(delta: float) -> void:
 				nextIndex += 1
 			if(nextIndex != unitIndex):
 				playerInput.emit(self)
-		if(canReflect and (currentTurnCount != turnCount) and Input.is_action_just_pressed("reflect")):
+		if((currentTurnCount != turnCount) and Input.is_action_just_pressed("reflect")):
 			#I just set reflect to r
-			canReflect = false
 			isAlive = true
 			reflect.emit(self)
 		if(Input.is_action_just_pressed("ui_accept")):
-			playerInput.emit(self)
 			if(!isAlive):
 				disableAction = true
 				nextUnit.emit()
+			else:
+				playerInput.emit(self)
+
 			
 func _on_stage_response(allowed : bool):
 	if(allowed and !disableAction):
