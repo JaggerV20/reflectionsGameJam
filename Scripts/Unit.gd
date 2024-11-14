@@ -20,6 +20,7 @@ var filler = false
 var breaker = false
 
 var disableAction = false
+var onSwitch = 0
 
 #"Propose" movement to the stage handler. Send unit identifier. Stage handler will check if nextIndex is valid
 signal playerInput

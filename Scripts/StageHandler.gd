@@ -98,9 +98,11 @@ func _ready() -> void:
 				if(!found):
 					print("Error. switch doesn't have respective lock")
 			"L":#Lock. Need to come up with some pairing method. Maybe just more cases for simplicity
+				grid_map.set_cell_item(Vector3i(xPos,0,zPos),0)
 				grid_map.set_cell_item(Vector3i(xPos,1,zPos),7)
 				stageMap[index] = defaultTileDict.duplicate()
 				stageMap[index]["Loc"] = Vector3i(xPos,1,zPos)
+				stageMap[index]["Walkable"] = false
 				stageMap[index]["Type"] = "Lock"
 			"X":#Breakable
 				grid_map.set_cell_item(Vector3i(xPos,1,zPos),2)
@@ -162,6 +164,7 @@ func _on_unit_selected(index : int):
 	unitNodes[currentUnit].nextIndex = startIndex
 	unitNodes[currentUnit].zPos = (startIndex / mapWidth) + 0.5
 	unitNodes[currentUnit].xPos = (startIndex % mapLength) + 0.5
+	unitNodes[currentUnit].onSwitch = 0
 	ghostNodes[currentUnit].visible = false
 #This method will check if an action is legal, like if the player can walk on the tile
 #It also needs to handle tile changes, such as filling or breaking tiles.
@@ -183,7 +186,22 @@ func _on_player_input(unit : Node3D):
 		stageMap[unit.nextIndex]["Loc"] = Vector3i(wantedTile["Loc"].x, 0, wantedTile["Loc"].z)
 	elif(wantedTile["Walkable"]):
 		unit.actionStack[unit.currentTurnCount - 1] = {"Index" : unit.unitIndex, "ActionIndex" : unit.nextIndex, "Effect" : "Move"} 
+		if(wantedTile["Type"] == "Switch"):
+			var lockIndex = stageMap[unit.nextIndex]["Unlocks"]
+			var lockLoc = stageMap[lockIndex]["Loc"]
+			grid_map.set_cell_item(lockLoc, -1)
+			stageMap[lockIndex] = defaultTileDict.duplicate()
+			stageMap[lockIndex]["Loc"] = lockLoc
 	if(stageMap[unit.nextIndex]["Walkable"]):
+		#Check if a unit was on a switch, and has left the switch
+		if(stageMap[unit.unitIndex]["Type"] == "Switch" and unit.unitIndex != unit.nextIndex):
+			var lockIndex = stageMap[unit.unitIndex]["Unlocks"]
+			var tempLoc = stageMap[lockIndex]["Loc"]
+			grid_map.set_cell_item(tempLoc, 7)
+			stageMap[lockIndex] = defaultTileDict.duplicate()
+			stageMap[lockIndex]["Loc"] = tempLoc
+			stageMap[lockIndex]["Walkable"] = false
+			stageMap[lockIndex]["Type"] = "Lock"
 		authorizeInput.emit(true)
 		playbackActionStack(unit.currentTurnCount)
 	else:
@@ -214,6 +232,21 @@ func playbackActionStack(turn : int):
 					grid_map.set_cell_item(Vector3i(tempLoc.x, 0, tempLoc.z), 0)
 					stageMap[unit.actionStack[index]["ActionIndex"]] = defaultTileDict.duplicate()
 					stageMap[unit.actionStack[index]["ActionIndex"]]["Loc"] = Vector3i(tempLoc.x, 0, tempLoc.z)
+				elif(stageMap[unit.actionStack[index]["ActionIndex"]]["Type"] == "Switch"):
+					var lockIndex = stageMap[unit.actionStack[index]["ActionIndex"]]["Unlocks"]
+					var lockLoc = stageMap[lockIndex]["Loc"]
+					grid_map.set_cell_item(lockLoc, -1)
+					stageMap[lockIndex] = defaultTileDict.duplicate()
+					stageMap[lockIndex]["Loc"] = lockLoc
+				#Checking if unit is no longer on switch
+				if(stageMap[unit.actionStack[index]["Index"]]["Type"] == "Switch" and unit.actionStack[index]["Index"] != unit.actionStack[index]["ActionIndex"]):
+					var lockIndex = stageMap[unit.actionStack[index]["Index"]]["Unlocks"]
+					var tempLoc = stageMap[lockIndex]["Loc"]
+					grid_map.set_cell_item(tempLoc, 7)
+					stageMap[lockIndex] = defaultTileDict.duplicate()
+					stageMap[lockIndex]["Loc"] = tempLoc
+					stageMap[lockIndex]["Walkable"] = false
+					stageMap[lockIndex]["Type"] = "Lock"
 		ghostIndex += 1
 
 
@@ -252,6 +285,14 @@ func undoActionStack():
 					stageMap[action["ActionIndex"]]["Walkable"] = false
 					stageMap[action["ActionIndex"]]["Breakable"] = true
 					stageMap[action["ActionIndex"]]["Loc"] = Vector3i(tempX,0,tempZ)
+				elif(stageMap[action["ActionIndex"]]["Type"] == "Switch"):
+					var lockIndex = stageMap[action["ActionIndex"]]["Unlocks"]
+					var lockLoc = stageMap[lockIndex]["Loc"]
+					grid_map.set_cell_item(lockLoc, 7)
+					stageMap[lockIndex] = defaultTileDict.duplicate()
+					stageMap[lockIndex]["Loc"] = lockLoc
+					stageMap[lockIndex]["Walkable"] = false
+					stageMap[lockIndex]["Type"] = "Lock"
 		unit.nextIndex = unit.unitIndex
 		unit.currentTurnCount = unit.turnCount
 	for ghost in ghostNodes:
