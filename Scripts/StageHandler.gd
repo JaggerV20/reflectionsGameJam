@@ -5,6 +5,11 @@ extends Node3D
 @onready var ghost_holder: Node3D = $GhostHolder
 @onready var j_test_select_scene: Node3D = $"../JTestSelectScene"
 @onready var soul_holder: Node3D = $SoulHolder
+@onready var stage_hud: Control = $StageHUD
+@onready var soul_count: Label = $StageHUD/SoulCount
+@onready var turn_count: Label = $StageHUD/TurnCount
+
+
 
 const FILLER_UNIT = preload("res://Scenes/FillerUnit.tscn")
 const BREAKER_UNIT = preload("res://Scenes/BreakerUnit.tscn")
@@ -183,6 +188,9 @@ func _process(delta: float) -> void:
 	pass
 		
 func _on_unit_selected(index : int):
+	stage_hud.visible = true
+	soul_count.text = "Souls: " + str(collectedSouls) + "/" + str(soulsNeeded)
+	turn_count.text = "Turns Remaining: " + str(unitNodes[currentUnit].currentTurnCount) + "/" + str(unitNodes[currentUnit].turnCount)
 	currentUnit = index
 	unitNodes[currentUnit].disableAction = false
 	unitNodes[currentUnit].isAlive = true
@@ -245,6 +253,8 @@ func _on_player_input(unit : Node3D):
 				stageMap[lockIndex]["Type"] = "Lock"
 		authorizeInput.emit(true)
 		playbackActionStack(unit.currentTurnCount)
+		soul_count.text = "Souls: " + str(collectedSouls) + "/" + str(soulsNeeded)
+		turn_count.text = "Turns Remaining: " + str(unitNodes[currentUnit].currentTurnCount) + "/" + str(unitNodes[currentUnit].turnCount)
 		
 	else:
 		authorizeInput.emit(false)
@@ -365,4 +375,5 @@ func _on_next_unit():
 	var tempZ = (startIndex / mapLength) + 0.5
 	ghostNodes[currentUnit].global_position = Vector3(tempX, 1.05, tempZ)
 	j_test_select_scene.visible = true
+	stage_hud.visible = false
 	toggleSelection.emit()
