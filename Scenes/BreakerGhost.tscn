@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://biv3i6aof4hl8"]
+
+[ext_resource type="BoxMesh" uid="uid://cd61df0gdji5n" path="res://Meshes/BreakerGhostMesh.tres" id="1_dk8tq"]
+
+[node name="BreakerGhost" type="Node3D"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = ExtResource("1_dk8tq")

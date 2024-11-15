@@ -1,0 +1,14 @@
+[gd_scene load_steps=4 format=3 uid="uid://bfe6u4tmsx3sb"]
+
+[ext_resource type="Script" path="res://Scripts/FlyerUnit.gd" id="1_fk2ip"]
+[ext_resource type="Material" uid="uid://cydvoyl8agen0" path="res://Materials/FlyerUnitMaterial.tres" id="1_weoc2"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_phg5k"]
+material = ExtResource("1_weoc2")
+size = Vector3(0.5, 0.5, 0.5)
+
+[node name="FlyerUnit" type="Node3D"]
+script = ExtResource("1_fk2ip")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_phg5k")
