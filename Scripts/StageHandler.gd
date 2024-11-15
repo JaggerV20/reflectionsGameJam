@@ -141,8 +141,10 @@ func _ready() -> void:
 			"G":#Goal
 				goalIndex = index
 				grid_map.set_cell_item(Vector3i(xPos,0,zPos),5)
+				grid_map.set_cell_item(Vector3i(xPos,1,zPos),5)
 				stageMap[index] = defaultTileDict.duplicate()
 				stageMap[index]["Type"] = "Goal"
+				stageMap[index]["Walkable"] = false
 				stageMap[index]["Loc"] = Vector3i(xPos,0,zPos)
 		if(soulIndex < soulArray.size() and index == soulArray[soulIndex]):
 			stageMap[index]["ContainsSoul"] = true
@@ -208,7 +210,10 @@ func _on_unit_selected(index : int):
 #This is how I'll store the action stack for reflects
 func _on_player_input(unit : Node3D):
 	var wantedTile = stageMap[unit.nextIndex]
-	if(unit.nextIndex == unit.unitIndex):
+	var levelComplete = false #I want the animations to play out before ending
+	if(wantedTile["Type"] == "Goal" and wantedTile["Walkable"]):
+		get_tree().call_deferred("change_scene_to_file","res://Scenes/BasicTitle.tscn")
+	elif(unit.nextIndex == unit.unitIndex):
 		unit.actionStack[unit.currentTurnCount - 1] = {"Index" : unit.unitIndex, "ActionIndex" : unit.nextIndex, "Effect" : "Wait", "CollectedSoul" : false}
 	elif(wantedTile["Fillable"] and unit.filler):
 		grid_map.set_cell_item(wantedTile["Loc"], 0)
@@ -255,7 +260,10 @@ func _on_player_input(unit : Node3D):
 		playbackActionStack(unit.currentTurnCount)
 		soul_count.text = "Souls: " + str(collectedSouls) + "/" + str(soulsNeeded)
 		turn_count.text = "Turns Remaining: " + str(unitNodes[currentUnit].currentTurnCount) + "/" + str(unitNodes[currentUnit].turnCount)
-		
+		if(collectedSouls > soulsNeeded):
+			var goalLoc = stageMap[goalIndex]["Loc"]
+			grid_map.set_cell_item(Vector3i(goalLoc.x, 1, goalLoc.z),-1)
+			stageMap[goalIndex]["Walkable"] = true
 	else:
 		authorizeInput.emit(false)
 	
@@ -297,7 +305,6 @@ func playbackActionStack(turn : int):
 					var lockIndex = stageMap[unit.actionStack[index]["Index"]]["Unlocks"]
 					var tempLoc = stageMap[lockIndex]["Loc"]
 					var unitsOnSwitch = false
-					print(stageMap[unit.actionStack[index]["Index"]]["OnSwitch"])
 					for switchUnits in stageMap[unit.actionStack[index]["Index"]]["OnSwitch"]:
 						unitsOnSwitch = unitsOnSwitch or switchUnits
 					if(!unitsOnSwitch):
@@ -353,10 +360,13 @@ func undoActionStack():
 					stageMap[lockIndex]["Loc"] = lockLoc
 					stageMap[lockIndex]["Walkable"] = false
 					stageMap[lockIndex]["Type"] = "Lock"
-
-					
 		unit.nextIndex = unit.unitIndex
 		unit.currentTurnCount = unit.turnCount
+		
+	if(collectedSouls > soulsNeeded):
+		var goalLoc = stageMap[goalIndex]["Loc"]
+		grid_map.set_cell_item(Vector3i(goalLoc.x, 1, goalLoc.z),5)
+		stageMap[goalIndex]["Walkable"] = false
 	for soul in soulNodes:
 		if(!soul.visible):
 			stageMap[soul.soulIndex]["ContainsSoul"] = true

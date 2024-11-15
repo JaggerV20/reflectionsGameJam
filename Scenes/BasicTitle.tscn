@@ -1,0 +1,54 @@
+[gd_scene load_steps=3 format=3 uid="uid://ehcmucfpc72f"]
+
+[ext_resource type="Script" path="res://Scripts/BasicTitle.gd" id="1_6fjkm"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_w2t88"]
+font_size = 56
+
+[node name="BasicTitle" type="Node2D"]
+script = ExtResource("1_6fjkm")
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Title" type="Label" parent="Control"]
+layout_mode = 0
+offset_left = 181.0
+offset_top = 171.0
+offset_right = 919.0
+offset_bottom = 248.0
+text = "Reflection Game Jam Demo"
+label_settings = SubResource("LabelSettings_w2t88")
+horizontal_alignment = 1
+
+[node name="Description" type="Label" parent="Control"]
+layout_mode = 0
+offset_left = 271.0
+offset_top = 269.0
+offset_right = 822.0
+offset_bottom = 292.0
+text = "Demo version of submission for Godot Wild Jam 75 for testing purposes"
+horizontal_alignment = 1
+
+[node name="Controls" type="Label" parent="Control"]
+layout_mode = 0
+offset_left = 303.0
+offset_top = 319.0
+offset_right = 763.0
+offset_bottom = 420.0
+text = "Controls:
+WASD/Arrows - Movement
+Space - Wait. Select next character after expending all turns
+R - Reflect. Undo actions"
+
+[node name="Prompt" type="Label" parent="Control"]
+layout_mode = 0
+offset_left = 449.0
+offset_top = 480.0
+offset_right = 602.0
+offset_bottom = 503.0
+text = "Press Space to Start"
+horizontal_alignment = 1
