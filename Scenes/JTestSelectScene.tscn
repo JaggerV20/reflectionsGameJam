@@ -1,39 +1,49 @@
-[gd_scene load_steps=10 format=3 uid="uid://ccc5mffn02s"]
+[gd_scene load_steps=15 format=3 uid="uid://ccc5mffn02s"]
 
 [ext_resource type="Script" path="res://Scripts/SelectUnit.gd" id="1_d1nfk"]
 [ext_resource type="Material" uid="uid://c3hjdasnlwa2s" path="res://Materials/UnitSelectionHighlightMat.tres" id="1_dvuqa"]
 [ext_resource type="Material" uid="uid://bbj3dpnikmoe7" path="res://Materials/FillerUnitMat.tres" id="2_0h8y6"]
 [ext_resource type="Material" uid="uid://c84evxjk5m2i6" path="res://Materials/BreakerUnitMat.tres" id="3_4e3e2"]
-
-[sub_resource type="Environment" id="Environment_l24uu"]
+[ext_resource type="Material" uid="uid://cydvoyl8agen0" path="res://Materials/FlyerUnitMaterial.tres" id="5_qjosr"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_tl7qb"]
-size = Vector3(7, 0.05, 7)
+size = Vector3(3, 0.05, 3)
 
 [sub_resource type="BoxMesh" id="BoxMesh_yind2"]
 material = ExtResource("1_dvuqa")
-size = Vector3(8, 0.05, 8)
+size = Vector3(3.5, 0.05, 3.5)
 
 [sub_resource type="BoxMesh" id="BoxMesh_p7s2g"]
 material = ExtResource("2_0h8y6")
+size = Vector3(0.5, 0.5, 0.5)
 
 [sub_resource type="BoxMesh" id="BoxMesh_fbhx1"]
 material = ExtResource("3_4e3e2")
+size = Vector3(0.5, 0.5, 0.5)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_e0sjh"]
+albedo_color = Color(0, 0, 0, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_sgbmv"]
+material = SubResource("StandardMaterial3D_e0sjh")
+size = Vector3(50, 0.05, 50)
+
+[sub_resource type="BoxMesh" id="BoxMesh_tj6uj"]
+size = Vector3(3, 0.05, 3)
+
+[sub_resource type="BoxMesh" id="BoxMesh_dt3hb"]
+material = ExtResource("1_dvuqa")
+size = Vector3(3.5, 0.05, 3.5)
+
+[sub_resource type="BoxMesh" id="BoxMesh_67drb"]
+material = ExtResource("5_qjosr")
+size = Vector3(0.5, 0.5, 0.5)
 
 [node name="JTestSelectScene" type="Node3D"]
 script = ExtResource("1_d1nfk")
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
-environment = SubResource("Environment_l24uu")
-
-[node name="Camera3D" type="Camera3D" parent="WorldEnvironment"]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 10, 0)
-
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="WorldEnvironment"]
-transform = Transform3D(1, 0, 0, 0, 0.0130373, 0.999915, 0, -0.999915, 0.0130373, 0, 0, 0)
-
 [node name="SelectionBox1" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0, 0)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="SelectionBox1"]
 mesh = SubResource("BoxMesh_tl7qb")
@@ -46,10 +56,10 @@ mesh = SubResource("BoxMesh_yind2")
 skeleton = NodePath("../../..")
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="SelectionBox1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 mesh = SubResource("BoxMesh_p7s2g")
 
 [node name="SelectionBox2" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, 0)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="SelectionBox2"]
 mesh = SubResource("BoxMesh_tl7qb")
@@ -62,6 +72,7 @@ mesh = SubResource("BoxMesh_yind2")
 skeleton = NodePath("../../..")
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="SelectionBox2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 mesh = SubResource("BoxMesh_fbhx1")
 
 [node name="Control" type="Control" parent="."]
@@ -76,6 +87,7 @@ offset_left = 200.0
 offset_top = 100.0
 offset_right = 339.0
 offset_bottom = 123.0
+
 
 [node name="Label1" type="Label" parent="Control"]
 layout_mode = 0
@@ -96,8 +108,9 @@ offset_bottom = 123.0
 [node name="UnitDescriptionLabel1" type="Label" parent="Control"]
 layout_mode = 0
 offset_left = 150.0
+
 offset_top = 500.0
-offset_right = 424.0
+offset_right = 374.0
 offset_bottom = 549.0
 text = "Fill Unit
 Turn fillable tiles into walkable tiles"
@@ -105,10 +118,41 @@ horizontal_alignment = 1
 
 [node name="UnitDescriptionLabel2" type="Label" parent="Control"]
 layout_mode = 0
-offset_left = 700.0
+
+offset_left = 450.0
+
 offset_top = 500.0
-offset_right = 999.0
+offset_right = 749.0
 offset_bottom = 549.0
 text = "Breaker Unit
 Turn breakable tiles into walkable tiles"
 horizontal_alignment = 1
+
+[node name="UnitDescriptionLabel3" type="Label" parent="Control"]
+layout_mode = 0
+offset_left = 900.0
+offset_top = 500.0
+offset_right = 1053.0
+offset_bottom = 549.0
+text = "Flyer Unit
+Fly over fillable tiles"
+horizontal_alignment = 1
+
+[node name="Background" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+mesh = SubResource("BoxMesh_sgbmv")
+
+[node name="SelectionBox3" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="SelectionBox3"]
+mesh = SubResource("BoxMesh_tj6uj")
+
+[node name="SelectionHighlight3" type="MeshInstance3D" parent="SelectionBox3/MeshInstance3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.05, 0)
+visible = false
+mesh = SubResource("BoxMesh_dt3hb")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="SelectionBox3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+mesh = SubResource("BoxMesh_67drb")
