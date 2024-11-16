@@ -322,9 +322,44 @@ func playbackActionStack(turn : int):
 
 
 func _on_player_reflect(unit : Node3D):
+
+	%ReflectTransition.reflectTransition()
+	for action in unit.actionStack:
+		print(action)
+		if(action != null):
+			unit.unitIndex = action["Index"]
+			if(action["Effect"] == "Fill"):
+				print("Reset fill")
+				var changedTile = stageMap[action["ActionIndex"]]
+				print(changedTile["Loc"])
+				var tempX = changedTile["Loc"].x
+				var tempZ = changedTile["Loc"].z
+				grid_map.set_cell_item(Vector3i(tempX,0,tempZ),1)
+				stageMap[action["ActionIndex"]] = defaultTileDict.duplicate()
+				stageMap[action["ActionIndex"]]["Type"] = "Fillable"
+				stageMap[action["ActionIndex"]]["Walkable"] = false
+				stageMap[action["ActionIndex"]]["Fillable"] = true
+				stageMap[action["ActionIndex"]]["Loc"] = Vector3i(tempX,0,tempZ)
+			elif(action["Effect"] == "Break"):
+				print("Reset break")
+				var changedTile = stageMap[action["ActionIndex"]]
+				print(changedTile["Loc"])
+				var tempX = changedTile["Loc"].x
+				var tempZ = changedTile["Loc"].z
+				grid_map.set_cell_item(Vector3i(tempX,1,tempZ),2)
+				grid_map.set_cell_item(Vector3i(tempX,0,tempZ),-1)
+				stageMap[action["ActionIndex"]] = defaultTileDict.duplicate()
+				stageMap[action["ActionIndex"]]["Type"] = "Breakable"
+				stageMap[action["ActionIndex"]]["Walkable"] = false
+				stageMap[action["ActionIndex"]]["Breakable"] = true
+				stageMap[action["ActionIndex"]]["Loc"] = Vector3i(tempX,0,tempZ)
+				
+	unit.nextIndex = unit.unitIndex
+
 	undoActionStack()
 	soul_count.text = "Souls: " + str(collectedSouls) + "/" + str(soulsNeeded)
 	turn_count.text = "Turns Remaining: " + str(unitNodes[currentUnit].currentTurnCount) + "/" + str(unitNodes[currentUnit].turnCount)
+
 	unit.zPos = (unit.unitIndex / mapWidth) + 0.5
 	unit.xPos = (unit.unitIndex % mapLength) + 0.5
 	unit.global_position.x = unit.xPos
