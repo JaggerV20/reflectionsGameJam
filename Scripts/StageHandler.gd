@@ -322,6 +322,7 @@ func playbackActionStack(turn : int):
 
 
 func _on_player_reflect(unit : Node3D):
+	%CanvasLayer.reflectTransition();
 	undoActionStack()
 	soul_count.text = "Souls: " + str(collectedSouls) + "/" + str(soulsNeeded)
 	turn_count.text = "Turns Remaining: " + str(unitNodes[currentUnit].currentTurnCount) + "/" + str(unitNodes[currentUnit].turnCount)
@@ -329,6 +330,7 @@ func _on_player_reflect(unit : Node3D):
 	unit.xPos = (unit.unitIndex % mapLength) + 0.5
 	unit.global_position.x = unit.xPos
 	unit.global_position.z = unit.zPos
+	
 
 func undoActionStack():
 	for unit in unitNodes:
