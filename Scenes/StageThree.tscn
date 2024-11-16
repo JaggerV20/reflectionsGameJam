@@ -1,0 +1,199 @@
+[gd_scene load_steps=20 format=3 uid="uid://dk4t6hgg7il5s"]
+
+[ext_resource type="Script" path="res://Scripts/StageThreeHandler.gd" id="1_mjmqn"]
+[ext_resource type="MeshLibrary" uid="uid://b42rnkosadtr2" path="res://basicTileMeshLib.tres" id="1_rpmah"]
+[ext_resource type="Material" uid="uid://c3hjdasnlwa2s" path="res://Materials/UnitSelectionHighlightMat.tres" id="2_lrwyv"]
+[ext_resource type="Material" uid="uid://bbj3dpnikmoe7" path="res://Materials/FillerUnitMat.tres" id="3_73agh"]
+[ext_resource type="Script" path="res://Scripts/UnitSelect.gd" id="3_pokpq"]
+[ext_resource type="Material" uid="uid://c84evxjk5m2i6" path="res://Materials/BreakerUnitMat.tres" id="4_gdmim"]
+[ext_resource type="Material" uid="uid://cydvoyl8agen0" path="res://Materials/FlyerUnitMaterial.tres" id="5_q7d74"]
+
+[sub_resource type="Environment" id="Environment_r3rdi"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_7pc4r"]
+size = Vector3(3, 0.05, 3)
+
+[sub_resource type="BoxMesh" id="BoxMesh_8fcwy"]
+material = ExtResource("2_lrwyv")
+size = Vector3(3.5, 0.05, 3.5)
+
+[sub_resource type="BoxMesh" id="BoxMesh_601rf"]
+material = ExtResource("3_73agh")
+size = Vector3(0.5, 0.5, 0.5)
+
+[sub_resource type="BoxMesh" id="BoxMesh_b8sqh"]
+size = Vector3(3, 0.05, 3)
+
+[sub_resource type="BoxMesh" id="BoxMesh_e0al5"]
+material = ExtResource("2_lrwyv")
+size = Vector3(3.5, 0.05, 3.5)
+
+[sub_resource type="BoxMesh" id="BoxMesh_tu765"]
+material = ExtResource("4_gdmim")
+size = Vector3(0.5, 0.5, 0.5)
+
+[sub_resource type="BoxMesh" id="BoxMesh_qejcy"]
+size = Vector3(3, 0.05, 3)
+
+[sub_resource type="BoxMesh" id="BoxMesh_wka1n"]
+material = ExtResource("2_lrwyv")
+size = Vector3(3.5, 0.05, 3.5)
+
+[sub_resource type="BoxMesh" id="BoxMesh_6iow0"]
+material = ExtResource("5_q7d74")
+size = Vector3(0.5, 0.5, 0.5)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_s6qid"]
+albedo_color = Color(0, 0, 0, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ugw3e"]
+material = SubResource("StandardMaterial3D_s6qid")
+size = Vector3(50, 0.05, 50)
+
+[node name="StageThree" type="Node3D"]
+
+[node name="StageHandler" type="Node3D" parent="."]
+script = ExtResource("1_mjmqn")
+
+[node name="GridMap" type="GridMap" parent="StageHandler"]
+mesh_library = ExtResource("1_rpmah")
+cell_size = Vector3(1, 1, 1)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="StageHandler"]
+environment = SubResource("Environment_r3rdi")
+
+[node name="Camera3D" type="Camera3D" parent="StageHandler/WorldEnvironment"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 5, 10, 5)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="StageHandler/WorldEnvironment"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 5, 10, 5)
+
+[node name="UnitHolder" type="Node3D" parent="StageHandler"]
+
+[node name="GhostHolder" type="Node3D" parent="StageHandler"]
+
+[node name="SoulHolder" type="Node3D" parent="StageHandler"]
+
+[node name="StageHUD" type="Control" parent="StageHandler"]
+visible = false
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="SoulCount" type="Label" parent="StageHandler/StageHUD"]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 25.0
+offset_right = 50.0
+offset_bottom = 48.0
+text = "Soul Count"
+
+[node name="TurnCount" type="Label" parent="StageHandler/StageHUD"]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 50.0
+offset_right = 50.0
+offset_bottom = 73.0
+text = "Turn Count"
+
+[node name="Selection" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 5, 5)
+script = ExtResource("3_pokpq")
+
+[node name="SelectionBox1" type="Node3D" parent="Selection"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Selection/SelectionBox1"]
+mesh = SubResource("BoxMesh_7pc4r")
+skeleton = NodePath("../..")
+
+[node name="SelectionHighlight1" type="MeshInstance3D" parent="Selection/SelectionBox1/MeshInstance3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.05, 0)
+visible = false
+mesh = SubResource("BoxMesh_8fcwy")
+skeleton = NodePath("../../..")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="Selection/SelectionBox1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+mesh = SubResource("BoxMesh_601rf")
+
+[node name="SelectionBox2" type="Node3D" parent="Selection"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Selection/SelectionBox2"]
+mesh = SubResource("BoxMesh_b8sqh")
+skeleton = NodePath("../..")
+
+[node name="SelectionHighlight2" type="MeshInstance3D" parent="Selection/SelectionBox2/MeshInstance3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.05, 0)
+visible = false
+mesh = SubResource("BoxMesh_e0al5")
+skeleton = NodePath("../../..")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="Selection/SelectionBox2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+mesh = SubResource("BoxMesh_tu765")
+
+[node name="SelectionBox3" type="Node3D" parent="Selection"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Selection/SelectionBox3"]
+mesh = SubResource("BoxMesh_qejcy")
+
+[node name="SelectionHighlight3" type="MeshInstance3D" parent="Selection/SelectionBox3/MeshInstance3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.05, 0)
+visible = false
+mesh = SubResource("BoxMesh_wka1n")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="Selection/SelectionBox3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+mesh = SubResource("BoxMesh_6iow0")
+
+[node name="Background" type="MeshInstance3D" parent="Selection"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+mesh = SubResource("BoxMesh_ugw3e")
+
+[node name="Control" type="Control" parent="Selection"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Label1" type="Label" parent="Selection/Control"]
+layout_mode = 0
+offset_left = 526.0
+offset_top = 33.0
+offset_right = 659.0
+offset_bottom = 56.0
+text = "Select Unit Order
+"
+
+[node name="UnitDescriptionLabel1" type="Label" parent="Selection/Control"]
+layout_mode = 0
+offset_left = 100.0
+offset_top = 500.0
+offset_right = 374.0
+offset_bottom = 549.0
+text = "Fill Unit
+Turn fillable tiles into walkable tiles"
+horizontal_alignment = 1
+
+[node name="UnitDescriptionLabel2" type="Label" parent="Selection/Control"]
+layout_mode = 0
+offset_left = 450.0
+offset_top = 500.0
+offset_right = 749.0
+offset_bottom = 549.0
+text = "Breaker Unit
+Turn breakable tiles into walkable tiles"
+horizontal_alignment = 1
+
+[node name="UnitDescriptionLabel3" type="Label" parent="Selection/Control"]
+layout_mode = 0
+offset_left = 900.0
+offset_top = 500.0
+offset_right = 1053.0
+offset_bottom = 549.0
+text = "Flyer Unit
+Fly over fillable tiles"
+horizontal_alignment = 1
