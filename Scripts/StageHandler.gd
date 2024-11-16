@@ -327,6 +327,8 @@ func _on_player_reflect(unit : Node3D):
 	turn_count.text = "Turns Remaining: " + str(unitNodes[currentUnit].currentTurnCount) + "/" + str(unitNodes[currentUnit].turnCount)
 	unit.zPos = (unit.unitIndex / mapWidth) + 0.5
 	unit.xPos = (unit.unitIndex % mapLength) + 0.5
+	unit.global_position.x = unit.xPos
+	unit.global_position.z = unit.zPos
 
 func undoActionStack():
 	for unit in unitNodes:
