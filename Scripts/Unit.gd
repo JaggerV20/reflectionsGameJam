@@ -71,7 +71,7 @@ func _physics_process(delta: float) -> void:
 				global_position.z = zPos;
 			
 		else:
-			if (blockbench_export.get_node("AnimationPlayer").current_animation != "Idle Pose" && isAlive == true):
+			if (blockbench_export != null and blockbench_export.get_node("AnimationPlayer").current_animation != "Idle Pose" && isAlive == true):
 				blockbench_export.get_node("AnimationPlayer").stop()
 				blockbench_export.get_node("AnimationPlayer").speed_scale = 1.0
 				blockbench_export.get_node("AnimationPlayer").play("Idle Pose")
@@ -80,9 +80,10 @@ func _physics_process(delta: float) -> void:
 			if(currentTurnCount == 0 && isAlive == true):
 				isAlive = false
 				print("done")
-				blockbench_export.get_node("AnimationPlayer").stop()
-				blockbench_export.get_node("AnimationPlayer").speed_scale = 1.0
-				blockbench_export.get_node("AnimationPlayer").play("Die")
+				if(blockbench_export != null):
+					blockbench_export.get_node("AnimationPlayer").stop()
+					blockbench_export.get_node("AnimationPlayer").speed_scale = 1.0
+					blockbench_export.get_node("AnimationPlayer").play("Die")
 			if(isAlive):
 				if(Input.is_action_just_pressed("ui_up")):
 					nextIndex -= mapWidth
@@ -129,8 +130,9 @@ func _on_stage_response(allowed : bool):
 		zPos = (unitIndex / mapWidth) + 0.5
 		xPos = (unitIndex % mapLength) + 0.5
 		currentTurnCount -= 1
-		blockbench_export.get_node("AnimationPlayer").stop()
-		blockbench_export.get_node("AnimationPlayer").speed_scale = 2.0
-		blockbench_export.get_node("AnimationPlayer").play("Walk")
+		if(blockbench_export != null):
+			blockbench_export.get_node("AnimationPlayer").stop()
+			blockbench_export.get_node("AnimationPlayer").speed_scale = 2.0
+			blockbench_export.get_node("AnimationPlayer").play("Walk")
 	else:
 		nextIndex = unitIndex
