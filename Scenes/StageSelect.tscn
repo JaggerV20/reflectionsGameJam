@@ -1,0 +1,98 @@
+[gd_scene load_steps=5 format=3 uid="uid://cne4i1orov4ev"]
+
+[ext_resource type="Script" path="res://Scripts/StageSelect.gd" id="1_q414n"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5jkr4"]
+albedo_color = Color(0.442911, 0.442911, 0.442911, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_pgk0v"]
+material = SubResource("StandardMaterial3D_5jkr4")
+size = Vector3(100, 100, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_a61u5"]
+size = Vector3(110, 110, 1)
+
+[node name="StageSelect" type="Node2D"]
+script = ExtResource("1_q414n")
+
+[node name="LabelLayer" type="CanvasLayer" parent="."]
+layer = 3
+
+[node name="StageOne" type="Label" parent="LabelLayer"]
+offset_left = 100.0
+offset_top = 300.0
+offset_right = 140.0
+offset_bottom = 323.0
+text = "1
+"
+
+[node name="StageTwo" type="Label" parent="LabelLayer"]
+offset_left = 250.0
+offset_top = 300.0
+offset_right = 290.0
+offset_bottom = 323.0
+text = "2
+"
+
+[node name="StageThree" type="Label" parent="LabelLayer"]
+offset_left = 400.0
+offset_top = 300.0
+offset_right = 440.0
+offset_bottom = 323.0
+text = "3
+"
+
+[node name="StageFour" type="Label" parent="LabelLayer"]
+visible = false
+offset_left = 550.0
+offset_top = 300.0
+offset_right = 590.0
+offset_bottom = 323.0
+text = "4
+"
+
+[node name="IconLayer" type="CanvasLayer" parent="."]
+layer = 2
+
+[node name="StageOne" type="MeshInstance2D" parent="IconLayer"]
+modulate = Color(0.489622, 0.489622, 0.489622, 1)
+position = Vector2(100, 300)
+mesh = SubResource("BoxMesh_pgk0v")
+
+[node name="StageTwo" type="MeshInstance2D" parent="IconLayer"]
+modulate = Color(0.489622, 0.489622, 0.489622, 1)
+position = Vector2(250, 300)
+mesh = SubResource("BoxMesh_pgk0v")
+
+[node name="StageThree" type="MeshInstance2D" parent="IconLayer"]
+modulate = Color(0.489622, 0.489622, 0.489622, 1)
+position = Vector2(400, 300)
+mesh = SubResource("BoxMesh_pgk0v")
+
+[node name="StageFour" type="MeshInstance2D" parent="IconLayer"]
+visible = false
+modulate = Color(0.489622, 0.489622, 0.489622, 1)
+position = Vector2(550, 300)
+mesh = SubResource("BoxMesh_pgk0v")
+
+[node name="HighlightLayer" type="CanvasLayer" parent="."]
+
+[node name="HighlightOne" type="MeshInstance2D" parent="HighlightLayer"]
+visible = false
+position = Vector2(100, 300)
+mesh = SubResource("BoxMesh_a61u5")
+
+[node name="HighlightTwo" type="MeshInstance2D" parent="HighlightLayer"]
+visible = false
+position = Vector2(250, 300)
+mesh = SubResource("BoxMesh_a61u5")
+
+[node name="HighlightThree" type="MeshInstance2D" parent="HighlightLayer"]
+visible = false
+position = Vector2(400, 300)
+mesh = SubResource("BoxMesh_a61u5")
+
+[node name="HighlightFour" type="MeshInstance2D" parent="HighlightLayer"]
+visible = false
+position = Vector2(550, 300)
+mesh = SubResource("BoxMesh_a61u5")

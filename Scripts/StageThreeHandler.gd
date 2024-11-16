@@ -238,10 +238,10 @@ func _on_player_input(unit : Node3D):
 			grid_map.set_cell_item(lockLoc, -1)
 			stageMap[lockIndex] = defaultTileDict.duplicate()
 			stageMap[lockIndex]["Loc"] = lockLoc
-		if(wantedTile["ContainsSoul"]):
-			soulNodes[wantedTile["SoulIndex"]].visible = false
-			stageMap[unit.nextIndex]["ContainsSoul"] = false
-			collectedSouls += 1
+	if(wantedTile["ContainsSoul"]):
+		soulNodes[wantedTile["SoulIndex"]].visible = false
+		stageMap[unit.nextIndex]["ContainsSoul"] = false
+		collectedSouls += 1
 	
 	#Confirming action is valid
 	if(stageMap[unit.nextIndex]["Walkable"] or (wantedTile["Fillable"] and unit.flyer)):
