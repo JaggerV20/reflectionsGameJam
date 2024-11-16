@@ -41,7 +41,6 @@ func _ready() -> void:
 	global_position.y = 1.05
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-
 func _physics_process(delta: float) -> void:
 	if(!disableAction):
 		
