@@ -215,7 +215,7 @@ func _on_player_input(unit : Node3D):
 	var wantedTile = stageMap[unit.nextIndex]
 	var levelComplete = false #I want the animations to play out before ending
 	if(wantedTile["Type"] == "Goal" and wantedTile["Walkable"]):
-		get_tree().call_deferred("change_scene_to_file","res://Scenes/BasicTitle.tscn")
+		get_tree().call_deferred("change_scene_to_file","res://Scenes/StageSelect.tscn")
 	elif(unit.nextIndex == unit.unitIndex):
 		unit.actionStack[unit.currentTurnCount - 1] = {"Index" : unit.unitIndex, "ActionIndex" : unit.nextIndex, "Effect" : "Wait", "CollectedSoul" : false}
 	elif(wantedTile["Fillable"] and unit.filler):

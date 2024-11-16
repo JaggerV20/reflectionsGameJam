@@ -27,6 +27,8 @@ func _ready() -> void:
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	if(!disableAction):
+		if(Input.is_action_just_pressed("ui_cancel")):
+			get_tree().call_deferred("change_scene_to_file","res://Scenes/StageSelect.tscn")
 		if(Input.is_action_just_pressed("ui_right")):
 			if(cursorIndex == null):
 				cursorIndex = -1
