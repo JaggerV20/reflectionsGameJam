@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://bdbdykvy6mnri"]
+[gd_scene load_steps=5 format=3 uid="uid://bdbdykvy6mnri"]
 
 [ext_resource type="Material" uid="uid://bbj3dpnikmoe7" path="res://Materials/FillerUnitMat.tres" id="1_5pc35"]
 [ext_resource type="Script" path="res://Scripts/FillerUnit.gd" id="1_m32em"]
+[ext_resource type="PackedScene" uid="uid://j2rxidk4pg1i" path="res://boro.tscn" id="3_p6axb"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_ewcjc"]
 material = ExtResource("1_5pc35")
@@ -11,4 +12,10 @@ size = Vector3(0.5, 0.5, 0.5)
 script = ExtResource("1_m32em")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+visible = false
 mesh = SubResource("BoxMesh_ewcjc")
+
+[node name="Model" type="MeshInstance3D" parent="."]
+visible = false
+
+[node name="blockbench_export" parent="." instance=ExtResource("3_p6axb")]
