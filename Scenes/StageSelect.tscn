@@ -50,6 +50,33 @@ offset_bottom = 323.0
 text = "4
 "
 
+[node name="Tips" type="Label" parent="LabelLayer"]
+offset_left = 70.0
+offset_top = 438.0
+offset_right = 110.0
+offset_bottom = 461.0
+text = "Important to note: Using all of a character's turns will make it become a ghost when you select 
+another character, and this ghost will follow the same path you took when controlling the character. 
+Ghosts IGNORE OBSTACLES, so as long as you can make it to a spot, the ghost doesn't need the path to be cleared anymore."
+
+[node name="Tips2" type="Label" parent="LabelLayer"]
+offset_left = 68.0
+offset_top = 386.0
+offset_right = 1020.0
+offset_bottom = 461.0
+text = "Collect enough souls to open the exit."
+
+[node name="Controls" type="Label" parent="LabelLayer"]
+offset_left = 72.0
+offset_top = 78.0
+offset_right = 618.0
+offset_bottom = 205.0
+text = "Controls:
+WASD/Arrows - Movement/Highlight stage
+Space/Enter - Wait a turn. Select next character after expending all turns. Enter stage
+R - Reflect. Undo actions
+Esc/Backspace - Return to stage select while on character select screen"
+
 [node name="IconLayer" type="CanvasLayer" parent="."]
 layer = 2
 

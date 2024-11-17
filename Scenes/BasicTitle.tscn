@@ -1,9 +1,13 @@
-[gd_scene load_steps=3 format=3 uid="uid://ehcmucfpc72f"]
+[gd_scene load_steps=5 format=3 uid="uid://ehcmucfpc72f"]
 
 [ext_resource type="Script" path="res://Scripts/BasicTitle.gd" id="1_6fjkm"]
+[ext_resource type="Texture2D" uid="uid://bfx347w2e3ys6" path="res://Scenes/JL_TitleScreen2.png" id="2_r3kk0"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_w2t88"]
 font_size = 56
+
+[sub_resource type="LabelSettings" id="LabelSettings_pdkyq"]
+font_size = 14
 
 [node name="BasicTitle" type="Node2D"]
 script = ExtResource("1_6fjkm")
@@ -16,52 +20,49 @@ offset_bottom = 40.0
 
 [node name="Title" type="Label" parent="Control"]
 layout_mode = 0
-offset_left = 181.0
-offset_top = 171.0
-offset_right = 919.0
-offset_bottom = 248.0
+offset_left = 229.0
+offset_top = -3.0
+offset_right = 967.0
+offset_bottom = 74.0
 text = "Jacob's Ladder"
 label_settings = SubResource("LabelSettings_w2t88")
 horizontal_alignment = 1
 
-[node name="Description" type="Label" parent="Control"]
-layout_mode = 0
-offset_left = 271.0
-offset_top = 269.0
-offset_right = 822.0
-offset_bottom = 292.0
-text = "Submission for Godot Wild Jam 75"
-horizontal_alignment = 1
-
-[node name="Controls" type="Label" parent="Control"]
-layout_mode = 0
-offset_left = 303.0
-offset_top = 319.0
-offset_right = 763.0
-offset_bottom = 420.0
-text = "Controls:
-WASD/Arrows - Movement
-Space - Wait. Select next character after expending all turns
-R - Reflect. Undo actions
-Esc/Backspace - Return to stage select while on character select screen"
-
 [node name="Prompt" type="Label" parent="Control"]
 layout_mode = 0
-offset_left = 449.0
-offset_top = 480.0
-offset_right = 602.0
-offset_bottom = 503.0
-text = "Press Space to Start"
+offset_left = 505.0
+offset_top = 81.0
+offset_right = 658.0
+offset_bottom = 104.0
+text = "Press Space/Enter to Start"
 horizontal_alignment = 1
 
 [node name="Credits" type="Label" parent="Control"]
 layout_mode = 0
-offset_left = 8.0
-offset_top = 506.0
-offset_right = 287.0
-offset_bottom = 633.0
+offset_left = 20.0
+offset_top = -1.0
+offset_right = 299.0
+offset_bottom = 126.0
 text = "Credits:
 Jagger Vicente(Ceno) - Programming
 Cole Tauscher - Programming
 Aya Seepersad - Art
 Aurora Troncoso - Audio"
+label_settings = SubResource("LabelSettings_pdkyq")
+
+[node name="Credits2" type="Label" parent="Control"]
+layout_mode = 0
+offset_left = 847.0
+offset_top = 6.0
+offset_right = 1126.0
+offset_bottom = 133.0
+text = "Wildcards used:
+Memento mori
+Undo
+Why limit yourself"
+horizontal_alignment = 2
+
+[node name="JlTitleScreen2" type="Sprite2D" parent="."]
+z_index = -5
+position = Vector2(577, 327)
+texture = ExtResource("2_r3kk0")
