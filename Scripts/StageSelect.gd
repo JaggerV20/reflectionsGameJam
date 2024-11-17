@@ -1,6 +1,5 @@
 extends Node2D
 
-@onready var stage_handler: Node3D = $"../StageHandler"
 @onready var selection_highlight_1: MeshInstance3D = $SelectionBox1/MeshInstance3D/SelectionHighlight1
 @onready var selection_highlight_2: MeshInstance3D = $SelectionBox2/MeshInstance3D/SelectionHighlight2
 @onready var selection_highlight_3: MeshInstance3D = $SelectionBox3/MeshInstance3D/SelectionHighlight3

@@ -223,8 +223,15 @@ func _on_player_input(unit : Node3D):
 		unit.actionStack[unit.currentTurnCount - 1] = {"Index" : unit.unitIndex, "ActionIndex" : unit.nextIndex, "Effect" : "Wait", "CollectedSoul" : false}
 	elif(wantedTile["Fillable"] and unit.filler):
 		grid_map.set_cell_item(wantedTile["Loc"], 0)
+		var tileHasSoul = stageMap[unit.nextIndex]["ContainsSoul"] 
+		var tempIndex = 0
+		if(tileHasSoul):
+			tempIndex = stageMap[unit.nextIndex]["SoulIndex"]
 		stageMap[unit.nextIndex] = defaultTileDict.duplicate()
 		stageMap[unit.nextIndex]["Loc"] = wantedTile["Loc"]
+		stageMap[unit.nextIndex]["ContainsSoul"] = tileHasSoul
+		if(tileHasSoul):
+			stageMap[unit.nextIndex]["SoulIndex"] = tempIndex
 		unit.actionStack[unit.currentTurnCount - 1] = {"Index" : unit.unitIndex, "ActionIndex" : unit.nextIndex, "Effect" : "Fill", "CollectedSoul" : false} 
 	elif(wantedTile["Breakable"] and unit.breaker):
 		grid_map.set_cell_item(Vector3i(wantedTile["Loc"].x, 1, wantedTile["Loc"].z), -1)
@@ -286,13 +293,24 @@ func playbackActionStack(turn : int):
 				var tempZ = (unit.actionStack[index]["ActionIndex"] / mapLength) + 0.5
 				var tempY = 1.05
 				ghostNodes[ghostIndex].global_position = Vector3(tempX, tempY, tempZ)
+				if(stageMap[unit.actionStack[index]["ActionIndex"]]["ContainsSoul"]):
+					soulNodes[stageMap[unit.actionStack[index]["ActionIndex"]]["SoulIndex"]].visible = false
+					stageMap[unit.actionStack[index]["ActionIndex"]]["ContainsSoul"] = false
+					collectedSouls += 1
 				#Movement change can be applied even if the unit doesn't move.
 				#Only need to check if tiles are changed
 				if(unit.actionStack[index]["Effect"] == "Fill"):
 					var tempLoc = stageMap[unit.actionStack[index]["ActionIndex"]]["Loc"]
+					var tileHasSoul = stageMap[unit.actionStack[index]["ActionIndex"]]["ContainsSoul"] 
+					var tempIndex = 0
+					if(tileHasSoul):
+						tempIndex = stageMap[unit.actionStack[index]["ActionIndex"]]["SoulIndex"] 
 					grid_map.set_cell_item(tempLoc, 0)
 					stageMap[unit.actionStack[index]["ActionIndex"]] = defaultTileDict.duplicate()
 					stageMap[unit.actionStack[index]["ActionIndex"]]["Loc"] = tempLoc
+					stageMap[unit.actionStack[index]["ActionIndex"]]["ContainsSoul"] = tileHasSoul
+					if(tileHasSoul):
+						stageMap[unit.actionStack[index]["ActionIndex"]]["SoulIndex"] = tempIndex 
 				elif(unit.actionStack[index]["Effect"] == "Break"):
 					var tempLoc = stageMap[unit.actionStack[index]["ActionIndex"]]["Loc"]
 					grid_map.set_cell_item(Vector3i(tempLoc.x, 1, tempLoc.z), -1)
@@ -319,10 +337,6 @@ func playbackActionStack(turn : int):
 						stageMap[lockIndex]["Loc"] = tempLoc
 						stageMap[lockIndex]["Walkable"] = false
 						stageMap[lockIndex]["Type"] = "Lock"
-				if(stageMap[unit.actionStack[index]["ActionIndex"]]["ContainsSoul"]):
-					soulNodes[stageMap[unit.actionStack[index]["ActionIndex"]]["SoulIndex"]].visible = false
-					stageMap[unit.actionStack[index]["ActionIndex"]]["ContainsSoul"] = false
-					collectedSouls += 1
 		ghostIndex += 1
 		unitNum += 1
 
