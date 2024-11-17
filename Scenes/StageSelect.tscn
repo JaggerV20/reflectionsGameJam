@@ -43,7 +43,6 @@ text = "3
 "
 
 [node name="StageFour" type="Label" parent="LabelLayer"]
-visible = false
 offset_left = 550.0
 offset_top = 300.0
 offset_right = 590.0
@@ -70,7 +69,6 @@ position = Vector2(400, 300)
 mesh = SubResource("BoxMesh_pgk0v")
 
 [node name="StageFour" type="MeshInstance2D" parent="IconLayer"]
-visible = false
 modulate = Color(0.489622, 0.489622, 0.489622, 1)
 position = Vector2(550, 300)
 mesh = SubResource("BoxMesh_pgk0v")

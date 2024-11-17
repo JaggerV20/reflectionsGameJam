@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://bfe6u4tmsx3sb"]
+[gd_scene load_steps=5 format=3 uid="uid://bfe6u4tmsx3sb"]
 
 [ext_resource type="Script" path="res://Scripts/FlyerUnit.gd" id="1_fk2ip"]
 [ext_resource type="Material" uid="uid://cydvoyl8agen0" path="res://Materials/FlyerUnitMaterial.tres" id="1_weoc2"]
+[ext_resource type="PackedScene" uid="uid://cdpgn66f8w1e0" path="res://Meshes/Pneuma_9.gltf" id="3_qoq10"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_phg5k"]
 material = ExtResource("1_weoc2")
@@ -11,4 +12,7 @@ size = Vector3(0.5, 0.5, 0.5)
 script = ExtResource("1_fk2ip")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+visible = false
 mesh = SubResource("BoxMesh_phg5k")
+
+[node name="blockbench_export" parent="." instance=ExtResource("3_qoq10")]

@@ -206,6 +206,8 @@ func _on_unit_selected(index : int):
 	unitNodes[currentUnit].nextIndex = startIndex
 	unitNodes[currentUnit].zPos = (startIndex / mapWidth) + 0.5
 	unitNodes[currentUnit].xPos = (startIndex % mapLength) + 0.5
+	unitNodes[currentUnit].global_position.z = unitNodes[currentUnit].zPos
+	unitNodes[currentUnit].global_position.x = unitNodes[currentUnit].xPos
 	unitNodes[currentUnit].onSwitch = 0
 	ghostNodes[currentUnit].visible = false
 #This method will check if an action is legal, like if the player can walk on the tile

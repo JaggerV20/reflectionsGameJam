@@ -22,17 +22,17 @@ const SOUL = preload("res://Scenes/Soul.tscn")
 
 var mapLength = 10
 var mapWidth = 10
-var charMap =  ["-","-","-","-","-","-","-","G","-","-",
-				"|",".","l",".","_",".",".","L",".","|",
+var charMap =  ["-","-","-","-","-","-","-","-","-","-",
 				"|",".",".",".","_",".",".",".",".","|",
 				"|",".",".",".","_",".",".",".",".","|",
-				"|","_","_","_","_","X","X","X","X","|",
-				"|",".",".",".",".",".",".",".",".","|",
-				"|",".",".",".",".",".",".",".",".","|",
-				"|",".",".",".",".",".",".",".",".","|",
-				"|",".",".","S",".",".",".",".",".","|",
-				"-","-","-","-","-","-","-","-","-","-"]
-var soulArray = [11,35,36,37,38,88]
+				"|",".",".","X","_","X",".",".",".","|",
+				"|","l","_","X","X","X","X","S",".","|",
+				"|","X",".",".",".",".",".",".",".","|",
+				"|","-","X",".",".",".",".",".","X","|",
+				"|",".","-","X",".",".",".","X","_","|",
+				"|",".",".","_","L",".","-","_",".","|",
+				"-","-","-","-","-","G","-","-","-","-"]
+var soulArray = [18,31,36,48,55,71,76,81,88]
 var stageMap = []
 var startIndex = 0
 var goalIndex = 0
@@ -58,10 +58,10 @@ var ghostNodes = []
 var soulNodes = []
 #Needs to be set whenever the player moves to the next unit
 var actionStack = []
-@export var stageTurnCount = 12
+@export var stageTurnCount = 13
 
 var collectedSouls = 0
-var soulsNeeded = 3
+var soulsNeeded = 8
 
 #Stage handler checks if the player input is valid. It will change the map if needed, then allow player movement
 signal authorizeInput

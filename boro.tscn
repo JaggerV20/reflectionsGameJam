@@ -1,4 +1,4 @@
-[gd_scene load_steps=2 format=3 uid="uid://j2rxidk4pg1i"]
+[gd_scene load_steps=2 format=3 uid="uid://brr0wl0uvjuk7"]
 
 [ext_resource type="PackedScene" uid="uid://cd665hbqpt2qq" path="res://Meshes/Boro_10.gltf" id="1_oo0vg"]
 
@@ -14,7 +14,7 @@ transform = Transform3D(0.939693, 0.34202, 0, -0.34202, 0.939693, 0, 0, 0, 1, 0,
 transform = Transform3D(0.906308, 0.422618, 0, -0.416198, 0.892539, 0.173648, 0.0733869, -0.157379, 0.984808, 0, 0.300888, -0.217862)
 
 [node name="LowerArmL2" parent="Node/Character/Torso2/UpperTorso/UpperArmL" index="4"]
-transform = Transform3D(-0.386067, -0.689893, -0.612372, 0.914262, -0.197798, -0.353553, 0.122788, -0.696364, 0.707107, 0, -0.25625, -0.2375)
+transform = Transform3D(-0.386066, -0.689893, -0.612372, 0.914262, -0.197798, -0.353553, 0.122788, -0.696364, 0.707107, 0, -0.25625, -0.2375)
 
 [node name="HandL2" parent="Node/Character/Torso2/UpperTorso/UpperArmL/LowerArmL2" index="2"]
 transform = Transform3D(0.882265, -0.221665, 0.415299, 0.155225, 0.969846, 0.187892, -0.444425, -0.101306, 0.890069, 0, -0.205362, -0.200888)
@@ -35,19 +35,19 @@ transform = Transform3D(0.984808, -0.173648, 0, 0.173648, 0.984808, 0, 0, 0, 1, 
 transform = Transform3D(0.996195, -0.0871557, 0, 0.0871557, 0.996195, 0, 0, 0, 1, 0.08125, 0.0625, 0)
 
 [node name="LowerTorso" parent="Node/Character/Torso2" index="1"]
-transform = Transform3D(0.996195, -0.0871557, 0, 0.0871557, 0.996195, 0, 0, 0, 1, 0, 0.9375, 0)
+transform = Transform3D(0.996195, -0.0871558, 0, 0.0871558, 0.996195, 0, 0, 0, 1, 0, 0.9375, 0)
 
 [node name="ThighL2" parent="Node/Character/Torso2/LowerTorso" index="4"]
-transform = Transform3D(0.5, -0.866025, 0, 0.852869, 0.492404, -0.173648, 0.150384, 0.0868241, 0.984808, 0, -0.1875, -0.09375)
+transform = Transform3D(0.642788, -0.607744, 0.466338, 0.766045, 0.509957, -0.391304, 5.96047e-08, 0.608761, 0.793353, 0, -0.1875, -0.09375)
 
 [node name="CalfL2" parent="Node/Character/Torso2/LowerTorso/ThighL2" index="2"]
-transform = Transform3D(-0.397131, 0.90549, 0.149582, -0.906308, -0.4126, 0.0914713, 0.144544, -0.0992412, 0.984509, 0, -0.28125, 2.77556e-17)
+transform = Transform3D(-0.397131, 0.851651, 0.34202, -0.906308, -0.422618, 0, 0.144544, -0.309975, 0.939692, 0, -0.28125, 2.77556e-17)
 
 [node name="FootL2" parent="Node/Character/Torso2/LowerTorso/ThighL2/CalfL2" index="2"]
-transform = Transform3D(0.643152, -0.765538, 0.017536, 0.765415, 0.643377, 0.0143772, -0.0222886, 0.00417563, 0.999743, -0.00625, -0.2375, -2.77556e-17)
+transform = Transform3D(0.609147, -0.792874, -0.0170649, 0.79275, 0.608171, 0.0409442, -0.0220852, -0.0384692, 0.999016, -0.00625, -0.2375, -2.77556e-17)
 
 [node name="ThighR2" parent="Node/Character/Torso2/LowerTorso" index="5"]
-transform = Transform3D(1, 0, 0, 0, 0.984808, 0.173648, 0, -0.173648, 0.984808, 0, -0.1875, 0.09375)
+transform = Transform3D(0.642788, -0.607744, -0.466338, 0.766044, 0.509958, 0.391304, -5.96046e-08, -0.608762, 0.793353, 0, -0.1875, 0.09375)
 
 [node name="CalfR2" parent="Node/Character/Torso2/LowerTorso/ThighR2" index="2"]
 transform = Transform3D(-0.397131, 0.851651, -0.34202, -0.906308, -0.422618, 0, -0.144544, 0.309976, 0.939693, 0, -0.28125, 0)
