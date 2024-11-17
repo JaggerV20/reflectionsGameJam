@@ -25,6 +25,8 @@ var actionStack = []
 var filler = false
 var breaker = false
 var flyer = false
+var boro = false
+var idle = "Idle"
 
 var disableAction = false
 var onSwitch = 0
@@ -39,11 +41,17 @@ func _ready() -> void:
 	stage_handler.authorizeInput.connect(_on_stage_response)
 	actionStack.resize(turnCount)
 	global_position.y = 1.05
+	global_position.x = xPos
+	global_position.z = zPos
+	if ($Model != null):
+		boro = true
+	
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(delta: float) -> void:
 	if(!disableAction):
-		
+		if boro:
+			idle = "Idle Pose"
 		#global_position.x = xPos
 		#global_position.z = zPos
 		var isMoving = false
@@ -58,7 +66,7 @@ func _physics_process(delta: float) -> void:
 				global_position.x -= delta * 2
 			travelX += delta * 2
 			if (travelX > overshootX):
-				print("snapped")
+				#print("snapped")
 				global_position.x = xPos;
 
 			if (tmpZ < zPos):
@@ -67,19 +75,19 @@ func _physics_process(delta: float) -> void:
 				global_position.z -= delta * 2
 			travelZ += delta * 2
 			if (travelZ > overshootZ):
-				print("snapped")
+				#print("snapped")
 				global_position.z = zPos;
 			
 		else:
-			if (blockbench_export != null and blockbench_export.get_node("AnimationPlayer").current_animation != "Idle Pose" && isAlive == true):
+			if (blockbench_export != null and blockbench_export.get_node("AnimationPlayer").current_animation != idle && isAlive == true):
 				blockbench_export.get_node("AnimationPlayer").stop()
 				blockbench_export.get_node("AnimationPlayer").speed_scale = 1.0
-				blockbench_export.get_node("AnimationPlayer").play("Idle Pose")
+				blockbench_export.get_node("AnimationPlayer").play(idle)
 			travelX = 0
 			travelZ = 0
 			if(currentTurnCount == 0 && isAlive == true):
 				isAlive = false
-				print("done")
+				#print("done")
 				if(blockbench_export != null):
 					blockbench_export.get_node("AnimationPlayer").stop()
 					blockbench_export.get_node("AnimationPlayer").speed_scale = 1.0
@@ -132,7 +140,8 @@ func _on_stage_response(allowed : bool):
 		currentTurnCount -= 1
 		if(blockbench_export != null):
 			blockbench_export.get_node("AnimationPlayer").stop()
-			blockbench_export.get_node("AnimationPlayer").speed_scale = 2.0
+			if boro:
+				blockbench_export.get_node("AnimationPlayer").speed_scale = 2.0
 			blockbench_export.get_node("AnimationPlayer").play("Walk")
 	else:
 		nextIndex = unitIndex

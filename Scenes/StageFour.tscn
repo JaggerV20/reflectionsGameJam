@@ -1,8 +1,10 @@
-[gd_scene load_steps=18 format=3 uid="uid://f5vqhgogvovi"]
+[gd_scene load_steps=20 format=3 uid="uid://f5vqhgogvovi"]
 
 [ext_resource type="MeshLibrary" uid="uid://b42rnkosadtr2" path="res://basicTileMeshLib.tres" id="1_rio2t"]
+[ext_resource type="Script" path="res://scripts/StageFourHandler.gd" id="1_w21jx"]
 [ext_resource type="Material" uid="uid://c3hjdasnlwa2s" path="res://Materials/UnitSelectionHighlightMat.tres" id="2_takmo"]
 [ext_resource type="Material" uid="uid://bbj3dpnikmoe7" path="res://Materials/FillerUnitMat.tres" id="3_ey315"]
+[ext_resource type="Script" path="res://scripts/UnitSelect.gd" id="3_qvg72"]
 [ext_resource type="Material" uid="uid://c84evxjk5m2i6" path="res://Materials/BreakerUnitMat.tres" id="4_kxxt8"]
 [ext_resource type="Material" uid="uid://cydvoyl8agen0" path="res://Materials/FlyerUnitMaterial.tres" id="5_o0ntu"]
 
@@ -51,6 +53,7 @@ size = Vector3(50, 0.05, 50)
 [node name="StageFour" type="Node3D"]
 
 [node name="StageHandler" type="Node3D" parent="."]
+script = ExtResource("1_w21jx")
 
 [node name="GridMap" type="GridMap" parent="StageHandler"]
 mesh_library = ExtResource("1_rio2t")
@@ -95,6 +98,7 @@ text = "Turn Count"
 
 [node name="Selection" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 5, 5)
+script = ExtResource("3_qvg72")
 
 [node name="SelectionBox1" type="Node3D" parent="Selection"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0, 0)

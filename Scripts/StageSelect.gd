@@ -33,8 +33,8 @@ var disableAction = false
 signal unitSelected
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	possibleStages = [STAGE_ONE, STAGE_TWO, STAGE_THREE]
-	highlightArray = [highlight_one, highlight_two, highlight_three]
+	possibleStages = [STAGE_ONE, STAGE_TWO, STAGE_THREE, STAGE_FOUR]
+	highlightArray = [highlight_one, highlight_two, highlight_three, highlight_four]
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
