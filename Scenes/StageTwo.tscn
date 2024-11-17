@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://14dvy6vsgvk5"]
+[gd_scene load_steps=27 format=3 uid="uid://14dvy6vsgvk5"]
 
 [ext_resource type="Script" path="res://Scripts/StageTwoHandler.gd" id="1_gdb45"]
 [ext_resource type="MeshLibrary" uid="uid://b42rnkosadtr2" path="res://basicTileMeshLib.tres" id="1_rpmah"]
@@ -7,7 +7,13 @@
 [ext_resource type="Material" uid="uid://bbj3dpnikmoe7" path="res://Materials/FillerUnitMat.tres" id="3_73agh"]
 [ext_resource type="Material" uid="uid://c84evxjk5m2i6" path="res://Materials/BreakerUnitMat.tres" id="4_gdmim"]
 [ext_resource type="Material" uid="uid://cydvoyl8agen0" path="res://Materials/FlyerUnitMaterial.tres" id="5_q7d74"]
+[ext_resource type="PackedScene" uid="uid://cd665hbqpt2qq" path="res://Meshes/Boro_10.gltf" id="6_8hs3k"]
+[ext_resource type="Script" path="res://Meshes/boro_10.gd" id="7_a2oes"]
 [ext_resource type="AudioStream" uid="uid://dsdrnrow8i3xn" path="res://Scenes/Back Talk.wav" id="8_5ofd6"]
+[ext_resource type="PackedScene" uid="uid://cfrvmfk42jcmy" path="res://Meshes/Igni_9.gltf" id="9_xsodp"]
+[ext_resource type="Script" path="res://Meshes/igni_9.gd" id="10_3o47s"]
+[ext_resource type="PackedScene" uid="uid://cdpgn66f8w1e0" path="res://Meshes/Pneuma_9.gltf" id="12_y1lpn"]
+[ext_resource type="Script" path="res://Meshes/pneuma_9.gd" id="13_111on"]
 
 [sub_resource type="Environment" id="Environment_hp1x0"]
 
@@ -117,7 +123,12 @@ skeleton = NodePath("../../..")
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="Selection/SelectionBox1"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+visible = false
 mesh = SubResource("BoxMesh_t3l2r")
+
+[node name="blockbench_export" parent="Selection/SelectionBox1" instance=ExtResource("6_8hs3k")]
+transform = Transform3D(1.91069e-15, 4.37114e-08, -1, 1, -4.37114e-08, 0, -4.37114e-08, -1, -4.37114e-08, 0.75, 1, 0.585)
+script = ExtResource("7_a2oes")
 
 [node name="SelectionBox2" type="Node3D" parent="Selection"]
 
@@ -133,7 +144,12 @@ skeleton = NodePath("../../..")
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="Selection/SelectionBox2"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+visible = false
 mesh = SubResource("BoxMesh_s6hwp")
+
+[node name="blockbench_export2" parent="Selection/SelectionBox2" instance=ExtResource("9_xsodp")]
+transform = Transform3D(1.91069e-15, 4.37114e-08, -1, 1, -4.37114e-08, 0, -4.37114e-08, -1, -4.37114e-08, 0, 0.5, 0.5)
+script = ExtResource("10_3o47s")
 
 [node name="SelectionBox3" type="Node3D" parent="Selection"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, 0)
@@ -148,7 +164,12 @@ mesh = SubResource("BoxMesh_bnqqu")
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="Selection/SelectionBox3"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+visible = false
 mesh = SubResource("BoxMesh_8g48r")
+
+[node name="blockbench_export" parent="Selection/SelectionBox3" instance=ExtResource("12_y1lpn")]
+transform = Transform3D(1.91069e-15, 4.37114e-08, -1, 1, -4.37114e-08, 0, -4.37114e-08, -1, -4.37114e-08, -0.4, 0.5, 0.55)
+script = ExtResource("13_111on")
 
 [node name="Background" type="MeshInstance3D" parent="Selection"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
@@ -161,42 +182,38 @@ offset_right = 40.0
 offset_bottom = 40.0
 
 [node name="Label1" type="Label" parent="Selection/Control"]
-layout_mode = 0
-offset_left = 526.0
+offset_left = 515.0
 offset_top = 33.0
-offset_right = 659.0
+offset_right = 648.0
 offset_bottom = 56.0
 text = "Select Unit Order
 "
 
 [node name="UnitDescriptionLabel1" type="Label" parent="Selection/Control"]
-layout_mode = 0
 offset_left = 100.0
 offset_top = 500.0
 offset_right = 374.0
 offset_bottom = 549.0
-text = "Fill Unit
-Turn fillable tiles into walkable tiles"
+text = "Boro
+Turn lava tiles into walkable tiles"
 horizontal_alignment = 1
 
 [node name="UnitDescriptionLabel2" type="Label" parent="Selection/Control"]
-layout_mode = 0
-offset_left = 450.0
+offset_left = 430.0
 offset_top = 500.0
-offset_right = 749.0
+offset_right = 729.0
 offset_bottom = 549.0
-text = "Breaker Unit
-Turn breakable tiles into walkable tiles"
+text = "Igni
+Turn mountain tiles into walkable tiles"
 horizontal_alignment = 1
 
 [node name="UnitDescriptionLabel3" type="Label" parent="Selection/Control"]
-layout_mode = 0
-offset_left = 900.0
+offset_left = 850.0
 offset_top = 500.0
-offset_right = 1053.0
+offset_right = 1003.0
 offset_bottom = 549.0
-text = "Flyer Unit
-Fly over fillable tiles"
+text = "Pneuma
+Fly over lava tiles"
 horizontal_alignment = 1
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
