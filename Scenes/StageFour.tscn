@@ -57,6 +57,7 @@ script = ExtResource("1_w21jx")
 
 [node name="GridMap" type="GridMap" parent="StageHandler"]
 mesh_library = ExtResource("1_rio2t")
+cell_size = Vector3(1, 1, 1)
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="StageHandler"]
 environment = SubResource("Environment_gnb4n")
