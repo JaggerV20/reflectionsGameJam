@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://f5vqhgogvovi"]
+[gd_scene load_steps=21 format=3 uid="uid://f5vqhgogvovi"]
 
 [ext_resource type="MeshLibrary" uid="uid://b42rnkosadtr2" path="res://basicTileMeshLib.tres" id="1_rio2t"]
 [ext_resource type="Script" path="res://scripts/StageFourHandler.gd" id="1_w21jx"]
@@ -7,6 +7,7 @@
 [ext_resource type="Script" path="res://scripts/UnitSelect.gd" id="3_qvg72"]
 [ext_resource type="Material" uid="uid://c84evxjk5m2i6" path="res://Materials/BreakerUnitMat.tres" id="4_kxxt8"]
 [ext_resource type="Material" uid="uid://cydvoyl8agen0" path="res://Materials/FlyerUnitMaterial.tres" id="5_o0ntu"]
+[ext_resource type="AudioStream" uid="uid://dsdrnrow8i3xn" path="res://Scenes/Back Talk.wav" id="8_shduq"]
 
 [sub_resource type="Environment" id="Environment_gnb4n"]
 
@@ -197,3 +198,7 @@ offset_bottom = 549.0
 text = "Flyer Unit
 Fly over fillable tiles"
 horizontal_alignment = 1
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("8_shduq")
+autoplay = true
