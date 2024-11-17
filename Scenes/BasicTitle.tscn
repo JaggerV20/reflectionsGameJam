@@ -20,7 +20,7 @@ offset_left = 181.0
 offset_top = 171.0
 offset_right = 919.0
 offset_bottom = 248.0
-text = "Reflection Game Jam Demo"
+text = "Jacob's Ladder"
 label_settings = SubResource("LabelSettings_w2t88")
 horizontal_alignment = 1
 
@@ -30,7 +30,7 @@ offset_left = 271.0
 offset_top = 269.0
 offset_right = 822.0
 offset_bottom = 292.0
-text = "Demo version of submission for Godot Wild Jam 75 for testing purposes"
+text = "Submission for Godot Wild Jam 75"
 horizontal_alignment = 1
 
 [node name="Controls" type="Label" parent="Control"]
@@ -42,7 +42,8 @@ offset_bottom = 420.0
 text = "Controls:
 WASD/Arrows - Movement
 Space - Wait. Select next character after expending all turns
-R - Reflect. Undo actions"
+R - Reflect. Undo actions
+Esc/Backspace - Return to stage select while on character select screen"
 
 [node name="Prompt" type="Label" parent="Control"]
 layout_mode = 0
@@ -52,3 +53,15 @@ offset_right = 602.0
 offset_bottom = 503.0
 text = "Press Space to Start"
 horizontal_alignment = 1
+
+[node name="Credits" type="Label" parent="Control"]
+layout_mode = 0
+offset_left = 8.0
+offset_top = 506.0
+offset_right = 287.0
+offset_bottom = 633.0
+text = "Credits:
+Jagger Vicente(Ceno) - Programming
+Cole Tauscher - Programming
+Aya Seepersad - Art
+Aurora Troncoso - Audio"

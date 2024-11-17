@@ -1,6 +1,6 @@
 [gd_scene load_steps=15 format=3 uid="uid://ccc5mffn02s"]
 
-[ext_resource type="Script" path="res://Scripts/SelectUnit.gd" id="1_d1nfk"]
+[ext_resource type="Script" path="res://Scripts/SelectUnitTest.gd" id="1_4rgv4"]
 [ext_resource type="Material" uid="uid://c3hjdasnlwa2s" path="res://Materials/UnitSelectionHighlightMat.tres" id="1_dvuqa"]
 [ext_resource type="Material" uid="uid://bbj3dpnikmoe7" path="res://Materials/FillerUnitMat.tres" id="2_0h8y6"]
 [ext_resource type="Material" uid="uid://c84evxjk5m2i6" path="res://Materials/BreakerUnitMat.tres" id="3_4e3e2"]
@@ -40,7 +40,7 @@ material = ExtResource("5_qjosr")
 size = Vector3(0.5, 0.5, 0.5)
 
 [node name="JTestSelectScene" type="Node3D"]
-script = ExtResource("1_d1nfk")
+script = ExtResource("1_4rgv4")
 
 [node name="SelectionBox1" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0, 0)
