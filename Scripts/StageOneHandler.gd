@@ -9,6 +9,7 @@ extends Node3D
 @onready var stage_hud: Control = $StageHUD
 @onready var soul_count: Label = $StageHUD/SoulCount
 @onready var turn_count: Label = $StageHUD/TurnCount
+@onready var soundthing: AudioStreamPlayer = $ReflectSound
 
 const FILLER_UNIT = preload("res://Scenes/FillerUnit.tscn")
 const BREAKER_UNIT = preload("res://Scenes/BreakerUnit.tscn")
@@ -327,6 +328,8 @@ func playbackActionStack(turn : int):
 
 
 func _on_player_reflect(unit : Node3D):
+	%CanvasLayer.reflectTransition();
+	soundthing.play(0.4)
 	undoActionStack()
 	soul_count.text = "Souls: " + str(collectedSouls) + "/" + str(soulsNeeded)
 	turn_count.text = "Turns Remaining: " + str(unitNodes[currentUnit].currentTurnCount) + "/" + str(unitNodes[currentUnit].turnCount)
